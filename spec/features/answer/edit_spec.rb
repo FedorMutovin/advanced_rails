@@ -13,7 +13,7 @@ feature 'User can edit his answer', %q{
   given!(:other_answer) { create(:answer, question: question, author: other_user) }
 
   scenario 'Unauthenticated can not edit answer' do
-    visit questions_path(question)
+    visit question_path(question)
 
     expect(page).to_not have_link 'Edit'
   end
