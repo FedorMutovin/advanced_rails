@@ -33,7 +33,20 @@ feature 'User can edit his answer', %q{
       end
     end
 
-    scenario 'edits his answer with errors' do
+    scenario 'edits his answer with errors', js:true do
+      sign_in user
+      visit question_path(question)
+
+      click_on 'Edit'
+
+      within '.answers' do
+        fill_in 'Your answer', with: ''
+        click_on 'Save'
+
+        expect(page).to have_content answer.body
+      end
+
+      expect(page).to have_content "Body can't be blank"
 
     end
 
