@@ -25,7 +25,7 @@ feature 'User can delete answer', %q{
 
     scenario 'delete other user answer' do
       other_answer = create(:answer, question: question, author: other_user)
-      expect(page).to_not have_selector(:css, "a[href='#{question_answer_path(question, other_answer)}']")
+      expect(page).to_not have_selector(:css, "a[href='#{answer_path(other_answer)}']")
     end
   end
 
