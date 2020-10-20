@@ -17,11 +17,11 @@ RSpec.describe AnswersController, type: :controller do
       before { sign_in(user) }
 
       it 'saves a new answer in the database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(question.answers, :count).by(1)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js }.to change(question.answers, :count).by(1)
       end
-      it 'redirects to parent question show view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        expect(response).to redirect_to assigns(:question)
+      it 'render create template' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
+        expect(response).to render_template :create
       end
     end
 
@@ -29,23 +29,23 @@ RSpec.describe AnswersController, type: :controller do
       before { sign_in(user) }
 
       it 'does not save the answer' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid), author: user } }.to_not change(Answer, :count)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid), author: user }, format: :js }.to_not change(Answer, :count)
       end
-      it 're-renders parent question show view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }
-        expect(response).to render_template 'questions/show'
+      it 'render create view' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid), format: :js }
+        expect(response).to render_template :create
       end
 
     end
 
     context 'without sign in' do
       it 'does not save the answer' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer), author: user } }.to_not change(Answer, :count)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer), author: user }, format: :js }.to_not change(Answer, :count)
       end
 
-      it 're-renders parent question show view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer), author: user }
-        expect(response).to render_template 'questions/show'
+      it 'render create view' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer), author: user, format: :js }
+        expect(response).to render_template :create
       end
     end
   end
