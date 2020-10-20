@@ -1,0 +1,8 @@
+table
+  thead
+    tr
+      th= 'Title'
+      th= 'Body'
+      th= 'Actions'
+  = render @questions
+p= link_to 'Ask question', new_question_path if current_user.present?

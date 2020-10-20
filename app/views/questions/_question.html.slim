@@ -1,0 +1,4 @@
+tr
+  td= link_to question.title, question_path(question), method: :get
+  td= question.body
+  td= link_to 'Delete', question, method: :delete if current_user&.author?(question)

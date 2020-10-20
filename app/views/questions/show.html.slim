@@ -1,0 +1,8 @@
+= render 'shared/errors', resource: @answer
+h1= @question.title
+p= @question.body
+= render 'answers/form', answer: @question.answers.new if current_user.present?
+table
+  thead
+    tr
+  = render @question.answers
