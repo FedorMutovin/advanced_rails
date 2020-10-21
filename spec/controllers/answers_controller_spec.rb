@@ -110,4 +110,31 @@ RSpec.describe AnswersController, type: :controller do
   #     end
   #   end
   # end
+
+  describe 'POST #mark_best' do
+    let!(:answer) { create(:answer, question: question, author: user) }
+
+    context 'with sign in' do
+      before { sign_in(user) }
+      it 'change best answer value' do
+        post :mark_best, params: { id: answer, answer: { best: true} }, format: :js
+        answer.reload
+        expect(answer.best).to eq true
+      end
+
+      it 'renders mark best view' do
+        post :mark_best, params: { id: answer, answer: { best: true } }, format: :js
+        expect(response).to render_template :mark_best
+      end
+    end
+
+    context 'without sign in' do
+      it 'not change best answer value' do
+        post :mark_best, params: { id: answer, answer: { best: true } }, format: :js
+        answer.reload
+        expect(answer.best).to_not eq true
+        expect(response).to render_template :mark_best
+      end
+    end
+  end
 end

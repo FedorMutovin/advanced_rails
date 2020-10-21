@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
   before_action :set_question, only: %i[new create destroy]
-  before_action :set_answer, only: %i[destroy update]
+  before_action :set_answer, only: %i[destroy update mark_best]
 
   def new; end
 
@@ -19,6 +19,11 @@ class AnswersController < ApplicationController
 
   def update
     @answer.update(answer_params) if current_user&.author?(@answer)
+    @question = @answer.question
+  end
+
+  def mark_best
+    @answer.mark_best if current_user&.author?(@answer)
     @question = @answer.question
   end
 
