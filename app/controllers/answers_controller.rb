@@ -1,6 +1,7 @@
 class AnswersController < ApplicationController
   before_action :set_question, only: %i[new create destroy]
   before_action :set_answer, only: %i[destroy update mark_best]
+  before_action :set_answer_question, only: %i[destroy update mark_best]
 
   def new; end
 
@@ -9,22 +10,15 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if current_user&.author?(@answer)
-      @answer.destroy
-      redirect_to @question, notice: 'Your answer successfully deleted.'
-    else
-      render 'questions/show'
-    end
+    @answer.destroy if current_user&.author?(@answer)
   end
 
   def update
     @answer.update(answer_params) if current_user&.author?(@answer)
-    @question = @answer.question
   end
 
   def mark_best
-    @answer.mark_best if current_user&.author?(@answer)
-    @question = @answer.question
+    @answer.mark_best if current_user&.author?(@answer) && current_user&.author?(@answer.question)
   end
 
   private
@@ -39,5 +33,9 @@ class AnswersController < ApplicationController
 
   def set_answer
     @answer = Answer.find(params[:id])
+  end
+
+  def set_answer_question
+    @question = @answer.question
   end
 end

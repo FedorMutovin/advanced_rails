@@ -17,13 +17,12 @@ feature 'User can delete answer', %q{
       visit question_path(question)
     end
 
-    scenario 'delete answer' do
+    scenario 'delete answer', js:true do
       click_on 'Delete'
-      expect(page).to have_content 'Your answer successfully deleted.'
       expect(page).to_not have_content answer.body
     end
 
-    scenario 'delete other user answer' do
+    scenario 'delete other user answer', js:true do
       other_answer = create(:answer, question: question, author: other_user)
       expect(page).to_not have_selector(:css, "a[href='#{answer_path(other_answer)}']")
     end

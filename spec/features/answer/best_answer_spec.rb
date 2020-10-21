@@ -10,7 +10,8 @@ feature 'User can select best answer for his question', %q{
   given(:other_user) { create(:user) }
   given!(:question) { create(:question, author: user) }
   given!(:answer) { create(:answer, question: question, author: user) }
-  given!(:other_answer) { create(:answer, question: question, author: other_user) }
+  given!(:other_question) { create(:question, author: other_user) }
+  given!(:other_answer) { create(:answer, question: question, author: user) }
 
   scenario 'Unauthenticated can not select best answer' do
     visit question_path(question)
@@ -19,13 +20,12 @@ feature 'User can select best answer for his question', %q{
   end
 
   describe 'Authenticated user' do
-    background do
-      sign_in user
-      visit question_path(question)
-    end
-
+    background { sign_in user }
     scenario 'select best answer', js:true do
-      click_on 'Best answer'
+      visit question_path(question)
+      expect(page).to_not have_content 'This is best answer'
+
+      find("a[href='#{mark_best_answer_path(answer)}']").click
 
       within '.answers' do
         expect(page).to have_content 'This is best answer'
@@ -33,7 +33,8 @@ feature 'User can select best answer for his question', %q{
     end
 
     scenario 'user select best answer for other user question' do
-      expect(page).to_not have_selector(:css, "a[href='#{mark_best_answer_path(other_answer)}']")
+      visit question_path(other_question)
+      expect(page).to_not have_link 'Best answer'
     end
   end
 end

@@ -82,34 +82,34 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
-  # describe 'DELETE #destroy' do
-  #
-  #   let!(:answer) { create(:answer, question: question, author: user) }
-  #
-  #   context 'with sign in' do
-  #     before { login(user) }
-  #
-  #     it 'deletes the answer' do
-  #       expect { delete :destroy, params: { id: answer, question_id: question } }.to change(Answer, :count).by(-1)
-  #     end
-  #
-  #     it 'redirects to question' do
-  #       delete :destroy, params: { id: answer, question_id: question }
-  #       expect(response).to redirect_to question_path(question)
-  #     end
-  #   end
-  #
-  #   context 'without sign in' do
-  #     it 'deletes the answer' do
-  #       expect { delete :destroy, params: { id: answer, question_id: question } }.to_not change(Answer, :count)
-  #     end
-  #
-  #     it 'render parent question' do
-  #       delete :destroy, params: { id: answer, question_id: question }
-  #       expect(response).to render_template 'questions/show'
-  #     end
-  #   end
-  # end
+  describe 'DELETE #destroy' do
+
+    let!(:answer) { create(:answer, question: question, author: user) }
+
+    context 'with sign in' do
+      before { login(user) }
+
+      it 'deletes the answer' do
+        expect { delete :destroy, params: { id: answer, question_id: question }, format: :js }.to change(Answer, :count).by(-1)
+      end
+
+      it 'redirects to question' do
+        delete :destroy, params: { id: answer, question_id: question }, format: :js
+        expect(response).to render_template :destroy
+      end
+    end
+
+    context 'without sign in' do
+      it 'deletes the answer' do
+        expect { delete :destroy, params: { id: answer, question_id: question }, format: :js }.to_not change(Answer, :count)
+      end
+
+      it 'render parent question' do
+        delete :destroy, params: { id: answer, question_id: question }, format: :js
+        expect(response).to render_template :destroy
+      end
+    end
+  end
 
   describe 'POST #mark_best' do
     let!(:answer) { create(:answer, question: question, author: user) }
