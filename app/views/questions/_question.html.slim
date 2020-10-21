@@ -1,7 +1,7 @@
 p
   = link_to question.title, question_path(question), method: :get
   = question.body
-  - if user_signed_in? && current_user&.author?(question)
+  - if current_user&.author?(question)
     = link_to 'Delete', question, method: :delete if current_user&.author?(question)
     = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
 = form_with model: question, class: 'hidden', html: { id: "edit-question-#{question.id}" } do |f|

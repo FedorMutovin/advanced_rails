@@ -1,6 +1,6 @@
 - if answer.best
   p This is best answer
-p
+p id = "answer-#{answer.id}"
   = answer.body
   - if user_signed_in? && current_user&.author?(answer)
     = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
