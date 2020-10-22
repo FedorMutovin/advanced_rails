@@ -1,8 +1,11 @@
-= render 'shared/errors', resource: @answer
 h1= @question.title
 p= @question.body
-= render 'answers/form', answer: @question.answers.new if current_user.present?
-table
-  thead
-    tr
+- if current_user.present?
+  .answer-errors
+    = render 'shared/errors', resource: @answer
+  = form_with model: [@question, @answer], class: 'new_answer' do |form|
+    = form.label :body
+    = form.text_area :body
+    = form.submit 'Answer'
+.answers
   = render @question.answers

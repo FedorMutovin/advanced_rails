@@ -1,4 +1,12 @@
-tr
-  td= link_to question.title, question_path(question), method: :get
-  td= question.body
-  td= link_to 'Delete', question, method: :delete if current_user&.author?(question)
+p
+  = link_to question.title, question_path(question), method: :get
+  = question.body
+  - if current_user&.author?(question)
+    = link_to 'Delete', question, method: :delete if current_user&.author?(question)
+    = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
+= form_with model: question, class: 'hidden', html: { id: "edit-question-#{question.id}" } do |f|
+  = f.label :title, 'Question title'
+  = f.text_field :title
+  = f.label :body, 'Question body'
+  = f.text_area :body
+  = f.submit 'Save'
