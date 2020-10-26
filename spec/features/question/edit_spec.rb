@@ -11,7 +11,7 @@ feature 'User can edit his question', %q{
   given!(:question) { create(:question, author: user) }
   given!(:other_question) { create(:question, author: other_user) }
 
-  scenario 'Unauthenticated can not edit answer' do
+  scenario 'Unauthenticated can not edit question' do
     visit questions_path
 
     expect(page).to_not have_link 'Edit'
@@ -23,7 +23,7 @@ feature 'User can edit his question', %q{
       visit questions_path
     end
 
-    scenario 'edits his answer', js:true do
+    scenario 'edits his question', js:true do
       click_on 'Edit'
 
       within '.questions' do
@@ -39,7 +39,7 @@ feature 'User can edit his question', %q{
       end
     end
 
-    scenario 'edits his answer with errors', js:true do
+    scenario 'edits his question with errors', js:true do
       click_on 'Edit'
 
       within '.questions' do
@@ -59,6 +59,23 @@ feature 'User can edit his question', %q{
     scenario "tries to edit other user's question" do
       expect(page).to_not have_css("a[data-question-id='#{other_question.id}']")
     end
+
+    scenario 'edits his question with attached files', js:true do
+      click_on 'Edit'
+
+      within '.questions' do
+        fill_in 'Question title', with: 'edited title'
+        fill_in 'Question body', with: 'edited body'
+        attach_file 'File', %W[#{Rails.root}/spec/rails_helper.rb #{Rails.root}/spec/spec_helper.rb]
+        click_on 'Save'
+      end
+
+      visit question_path(question)
+
+      expect(page).to have_link 'rails_helper.rb'
+      expect(page).to have_link 'spec_helper.rb'
+    end
+
   end
 
 end
