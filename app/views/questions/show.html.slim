@@ -11,6 +11,8 @@ p= @question.body
   = form_with model: [@question, @answer], class: 'new_answer' do |form|
     = form.label :body
     = form.text_area :body
+    = form.label :files
+    = form.file_field :files, multiple: true
     = form.submit 'Answer'
 .answers
   = render @question.answers
