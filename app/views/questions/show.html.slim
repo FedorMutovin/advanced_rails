@@ -1,11 +1,15 @@
 h1= @question.title
 p= @question.body
+.question-files
+  = render 'shared/files', resource: @question
 - if current_user.present?
   .answer-errors
     = render 'shared/errors', resource: @answer
   = form_with model: [@question, @answer], class: 'new_answer' do |form|
     = form.label :body
     = form.text_area :body
+    = form.label :files
+    = form.file_field :files, multiple: true
     = form.submit 'Answer'
 .answers
   = render @question.answers
