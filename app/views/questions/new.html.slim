@@ -10,10 +10,7 @@
   p
     = f.fields_for :links do |l|
       p
-        = l.label :name, 'Link name'
-        = l.text_field :name
-      p
-        = l.label :url
-        = l.text_field :url
-
+        = render 'links/fields', f: l
+      .links
+        = link_to_add_association 'add Links', f, :links, partial: 'links/fields'
   = f.submit 'Ask'

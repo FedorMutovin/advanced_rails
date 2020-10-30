@@ -23,4 +23,27 @@ feature 'User can add links to question', %q{
     expect(page).to have_link 'My Gist', href: gist_url
   end
 
+  scenario 'User adds dome links when asks question', js:true do
+    sign_in(user)
+    visit new_question_path
+
+    fill_in 'Title', with: 'Test question'
+    fill_in 'Body', with: 'text text text'
+
+    fill_in 'Link name', with: 'My Gist'
+    fill_in 'Url', with: gist_url
+
+    click_on 'add Links'
+
+    within all(".nested-fields")[1] do
+      fill_in 'Link name', with: 'Double Gist'
+      fill_in 'Url', with: gist_url
+    end
+
+    click_on 'Ask'
+
+    expect(page).to have_link 'My Gist', href: gist_url
+    expect(page).to have_link 'Double Gist', href: gist_url
+  end
+
 end
