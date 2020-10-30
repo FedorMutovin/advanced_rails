@@ -7,30 +7,40 @@ feature 'User can add links to answer', %q{
 } do
   given(:user) { create(:user) }
   given(:question) { create(:question, author: user) }
-  given(:gist_url) { 'https://gist.github.com/FedorMutovin/00719ddb7e67687c023d8352d36d5ce3' }
+  given(:answer) { create(:answer, question: question, author: user) }
+  given!(:gist_link) { create(:gist_link, linkable: answer) }
+  given(:url) { 'https://123/' }
 
   background do
     sign_in(user)
     visit question_path(question)
   end
 
-  scenario 'User adds link when give an answer', js: true do
-    fill_in 'Body', with: 'text text text'
+  describe 'User' do
+    scenario 'adds link when give an answer', js: true do
+      fill_in 'Body', with: 'text text text'
 
-    fill_in 'Link name', with: 'My Gist'
-    fill_in 'Url', with: gist_url
+      fill_in 'Link name', with: 'My Gist'
+      fill_in 'Url', with: url
 
-    click_on 'Answer'
+      click_on 'Answer'
 
-    within '.answers' do
-      expect(page).to have_link 'My Gist', href: gist_url
+
+      expect(page).to have_link 'My Gist', href: url
     end
-  end
 
-  scenario 'User adds invalid url', js: true do
-    fill_in 'Url', with: 'abc'
-    click_on 'Answer'
+    scenario 'adds invalid url', js: true do
+      fill_in 'Url', with: 'abc'
+      click_on 'Answer'
 
-    expect(page).to have_content 'Links url is not a valid URL'
+      expect(page).to have_content 'Links url is not a valid URL'
+    end
+
+    scenario 'can see gist content', js: true do
+
+      within '.answers' do
+        expect(page).to have_content gist_link.gist
+      end
+    end
   end
 end
