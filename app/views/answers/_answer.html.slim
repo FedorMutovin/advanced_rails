@@ -4,7 +4,8 @@ p id = "answer-#{answer.id}"
   .answer-files
     = render 'shared/files', resource: answer
   = answer.body
-  = render 'shared/links', resource: answer
+  .answer-links
+    = render 'shared/links', resource: answer
   - if user_signed_in? && current_user&.author?(answer)
     = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
     = link_to 'Delete', answer_path(answer), method: :delete, remote: true

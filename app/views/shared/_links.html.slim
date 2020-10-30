@@ -1,8 +1,9 @@
-.links
-  p Links:
-  ul
-    - resource.links.each do |link|
+p Links:
+ul
+  - resource.links.each do |link|
+    li id = "link-#{link.id}"
       -if link.gist?
-        li= link.gist
+        = link.gist
       -else
-        li= link_to link.name, link.url
+        = link_to link.name, link.url
+      = link_to 'Delete link', link_path(link), method: :delete, remote: true if current_user&.author?(resource)

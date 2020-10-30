@@ -2,6 +2,7 @@ h1= @question.title
 p= @question.body
 .question-files
   = render 'shared/files', resource: @question
+.question-links
   = render 'shared/links', resource: @question
 - if current_user.present?
   .answer-errors
