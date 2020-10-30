@@ -3,4 +3,12 @@ class Link < ApplicationRecord
 
   validates :name, :url, presence: true
   validates :url, url: true
+
+  def gist?
+    url.include?("/gist.github.com/")
+  end
+
+  def gist
+    Octokit::Client.new.gist(url.split('/').last).files.first[1].content if gist?
+  end
 end
