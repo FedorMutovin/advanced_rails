@@ -8,10 +8,12 @@ feature 'User can add links to question', %q{
   given(:user) { create(:user) }
   given(:gist_url) { 'https://gist.github.com/FedorMutovin/00719ddb7e67687c023d8352d36d5ce3' }
 
-  scenario 'User adds link when asks question' do
+  background do
     sign_in(user)
     visit new_question_path
+  end
 
+  scenario 'User adds link when asks question' do
     fill_in 'Title', with: 'Test question'
     fill_in 'Body', with: 'text text text'
 
@@ -23,10 +25,7 @@ feature 'User can add links to question', %q{
     expect(page).to have_link 'My Gist', href: gist_url
   end
 
-  scenario 'User adds dome links when asks question', js:true do
-    sign_in(user)
-    visit new_question_path
-
+  scenario 'User adds some links when asks question', js:true do
     fill_in 'Title', with: 'Test question'
     fill_in 'Body', with: 'text text text'
 
@@ -44,6 +43,13 @@ feature 'User can add links to question', %q{
 
     expect(page).to have_link 'My Gist', href: gist_url
     expect(page).to have_link 'Double Gist', href: gist_url
+  end
+
+  scenario 'User adds invalid url' do
+    fill_in 'Url', with: 'abc'
+    click_on 'Ask'
+
+    expect(page).to have_content 'Links url is not a valid URL'
   end
 
 end

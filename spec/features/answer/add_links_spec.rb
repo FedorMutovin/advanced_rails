@@ -9,10 +9,12 @@ feature 'User can add links to answer', %q{
   given(:question) { create(:question, author: user) }
   given(:gist_url) { 'https://gist.github.com/FedorMutovin/00719ddb7e67687c023d8352d36d5ce3' }
 
-  scenario 'User adds link when give an answer', js: true do
+  background do
     sign_in(user)
     visit question_path(question)
+  end
 
+  scenario 'User adds link when give an answer', js: true do
     fill_in 'Body', with: 'text text text'
 
     fill_in 'Link name', with: 'My Gist'
@@ -25,4 +27,10 @@ feature 'User can add links to answer', %q{
     end
   end
 
+  scenario 'User adds invalid url', js: true do
+    fill_in 'Url', with: 'abc'
+    click_on 'Answer'
+
+    expect(page).to have_content 'Links url is not a valid URL'
+  end
 end
