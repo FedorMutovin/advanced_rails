@@ -50,7 +50,7 @@ feature 'User can create question', %q{
       attach_file 'Image', "#{Rails.root}/public/apple-touch-icon.png"
       click_on 'Ask'
 
-      expect(page).to have_link 'Reward for question'
+      expect(page).to have_link 'reward'
     end
   end
 
