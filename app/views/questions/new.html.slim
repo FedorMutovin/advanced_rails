@@ -7,4 +7,5 @@
   = f.label :files
   = f.file_field :files, multiple: true
   = render 'links/form', form: f, link_new: nil
+  = render 'rewards/form', form: f
   = f.submit 'Ask'

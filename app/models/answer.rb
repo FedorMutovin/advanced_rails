@@ -2,6 +2,7 @@ class Answer < ApplicationRecord
   has_many :links, dependent: :destroy, as: :linkable
   belongs_to :question
   belongs_to :author, class_name: 'User'
+  has_one :reward, dependent: :nullify
 
   has_many_attached :files
 
