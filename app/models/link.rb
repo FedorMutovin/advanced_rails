@@ -4,6 +4,14 @@ class Link < ApplicationRecord
   validates :name, :url, presence: true
   validates :url, url: true
 
+  before_validation :set_gist_name
+
+  private
+
+  def set_gist_name
+    self.name = gist if gist?
+  end
+
   def gist?
     url.include?("/gist.github.com/")
   end

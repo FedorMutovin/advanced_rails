@@ -4,7 +4,6 @@ p= @question.body
   = render 'shared/files', resource: @question
 .question-links
   = render 'shared/links', resource: @question
-- if @question.reward.present?
   .reward
     = render @question.reward
 - if current_user.present?
@@ -17,6 +16,5 @@ p= @question.body
     = form.file_field :files, multiple: true
     = render 'links/form', form: form, link_new: nil
     = form.submit 'Answer'
-
 .answers
   = render @question.answers
