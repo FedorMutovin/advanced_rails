@@ -6,11 +6,5 @@
   = f.text_area :body
   = f.label :files
   = f.file_field :files, multiple: true
-  p Links:
-  p
-    = f.fields_for :links do |l|
-      p
-        = render 'links/fields', f: l
-      .links
-        = link_to_add_association 'add Links', f, :links, partial: 'links/fields'
+  = render 'links/form', form: f, link_new: nil
   = f.submit 'Ask'

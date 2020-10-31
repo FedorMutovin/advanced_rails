@@ -10,6 +10,7 @@ feature 'User can edit his question', %q{
   given(:other_user) { create(:user) }
   given!(:question) { create(:question, author: user) }
   given!(:other_question) { create(:question, author: other_user) }
+  given(:url) { 'https://123/' }
 
   scenario 'Unauthenticated can not edit question' do
     visit questions_path
@@ -74,6 +75,23 @@ feature 'User can edit his question', %q{
 
       expect(page).to have_link 'rails_helper.rb'
       expect(page).to have_link 'spec_helper.rb'
+    end
+
+    scenario 'edits his question with links', js:true do
+      click_on 'Edit'
+
+      within '.questions' do
+        fill_in 'Question title', with: 'edited title'
+        fill_in 'Question body', with: 'edited body'
+
+        fill_in 'Link name', with: 'My Gist'
+        fill_in 'Url', with: url
+        click_on 'Save'
+      end
+
+      visit question_path(question)
+
+      expect(page).to have_link 'My Gist', href: url
     end
 
   end

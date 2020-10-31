@@ -12,15 +12,7 @@ p= @question.body
     = form.text_area :body
     = form.label :files
     = form.file_field :files, multiple: true
-    p Links:
-    p
-      = form.fields_for :links do |l|
-        p
-          = l.label :name, 'Link name'
-          = l.text_field :name
-        p
-          = l.label :url
-          = l.text_field :url
+    = render 'links/form', form: form, link_new: nil
     = form.submit 'Answer'
 
 .answers
