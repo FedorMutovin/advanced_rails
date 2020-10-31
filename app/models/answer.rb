@@ -11,6 +11,7 @@ class Answer < ApplicationRecord
   validates :body, presence: true
 
   scope :best, -> { order best: :desc }
+  scope :with_reward, -> { where(best: true) }
 
   def mark_best
     question.answers.update_all(best: false)
