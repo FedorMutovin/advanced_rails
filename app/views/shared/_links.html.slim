@@ -2,5 +2,8 @@ p Links:
 ul
   - resource.links.each do |link|
     li id = "link-#{link.id}"
-      = link_to link.name, link.url
+      - if link.gist?
+        script src="#{link.url}.js"
+      - else
+        = link_to link.name, link.url
       = link_to 'Delete link', link_path(link), method: :delete, remote: true if current_user&.author?(resource)

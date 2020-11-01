@@ -1,7 +1,7 @@
 - if answer.best
   p This is best answer
   .reward
-    = render answer.reward
+    = render answer.reward if answer.reward.present?
 p id = "answer-#{answer.id}"
   .answer-files
     = render 'shared/files', resource: answer

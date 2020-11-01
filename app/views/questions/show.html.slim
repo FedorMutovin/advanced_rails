@@ -5,7 +5,7 @@ p= @question.body
 .question-links
   = render 'shared/links', resource: @question
   .reward
-    = render @question.reward
+    = render @question.reward if @question.reward.present?
 - if current_user.present?
   .answer-errors
     = render 'shared/errors', resource: @answer
