@@ -3,3 +3,4 @@
 p= link_to 'Ask question', new_question_path if current_user.present?
 .question-errors
   = render 'shared/errors', resource: @question
+p= link_to 'My rewards', rewards_path if current_user.present?

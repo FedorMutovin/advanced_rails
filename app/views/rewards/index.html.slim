@@ -1,0 +1,18 @@
+- if @rewards.present?
+  .rewards-table
+    p My Rewards:
+    table
+      thead
+        tr
+          th Question Title
+          th Reward name
+          th Reward image
+      tbody
+        tr
+          - @rewards.each do |reward|
+            td
+              = reward.question.title
+            td
+              = reward.name
+            td
+              = image_tag(reward.image, alt: reward.name, size: "50x50")

@@ -11,6 +11,7 @@ class AnswersController < ApplicationController
 
   def destroy
     @answer.destroy if current_user&.author?(@answer)
+    @answers = @question.answers
   end
 
   def update
@@ -24,7 +25,7 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:body, :author, files: [])
+    params.require(:answer).permit(:body, :author, files: [], links_attributes: [:name, :url])
   end
 
   def set_question

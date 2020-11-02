@@ -12,6 +12,7 @@ feature 'User can select best answer for his question', %q{
   given!(:answer) { create(:answer, question: question, author: user) }
   given!(:other_question) { create(:question, author: other_user) }
   given!(:other_answer) { create(:answer, question: question, author: user) }
+  given!(:reward) { create(:reward, question: question) }
 
   scenario 'Unauthenticated can not select best answer' do
     visit question_path(question)
@@ -29,6 +30,7 @@ feature 'User can select best answer for his question', %q{
 
       within '.answers' do
         expect(page).to have_content 'This is best answer'
+        expect(page).to have_link reward.name
       end
     end
 

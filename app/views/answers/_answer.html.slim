@@ -1,9 +1,13 @@
 - if answer.best
   p This is best answer
+  .reward
+    = render answer.reward if answer.reward.present?
 p id = "answer-#{answer.id}"
   .answer-files
     = render 'shared/files', resource: answer
   = answer.body
+  .answer-links
+    = render 'shared/links', resource: answer
   - if user_signed_in? && current_user&.author?(answer)
     = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
     = link_to 'Delete', answer_path(answer), method: :delete, remote: true
@@ -13,4 +17,5 @@ p id = "answer-#{answer.id}"
   = f.text_area :body
   = f.label :files
   = f.file_field :files, multiple: true
+  = render 'links/form', form: f, link_new: Link.new
   = f.submit 'Save'

@@ -11,6 +11,7 @@ feature 'User can edit his answer', %q{
   given!(:question) { create(:question, author: user) }
   given!(:answer) { create(:answer, question: question, author: user) }
   given!(:other_answer) { create(:answer, question: question, author: other_user) }
+  given(:url) { 'https://123/' }
 
   scenario 'Unauthenticated can not edit answer' do
     visit question_path(question)
@@ -70,6 +71,21 @@ feature 'User can edit his answer', %q{
         expect(page).to have_link 'spec_helper.rb'
       end
     end
-  end
 
+    scenario 'edits his answer with links', js:true do
+      click_on 'Edit'
+
+      within '.answers' do
+        fill_in 'Your answer', with: 'edited answer'
+        fill_in 'Link name', with: 'My Gist'
+        fill_in 'Url', with: url
+        click_on 'Save'
+      end
+
+      visit question_path(question)
+      within '.answers' do
+        expect(page).to have_link 'My Gist', href: url
+      end
+    end
+  end
 end
