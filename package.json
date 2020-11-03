@@ -1,5 +1,16 @@
 {
   "name": "qna",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "@rails/activestorage": "^6.0.3-4",
+    "@rails/ujs": "^6.0.3-4",
+    "@rails/webpacker": "5.2.1",
+    "cocoon": "github:nathanvda/cocoon#c24ba53",
+    "gist-client": "^1.1.1",
+    "jquery": "^3.5.1",
+    "turbolinks": "^5.2.0"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^3.11.0"
+  }
 }
