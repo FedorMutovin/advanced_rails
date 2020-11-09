@@ -18,8 +18,4 @@ class Answer < ApplicationRecord
     update(best: true)
     self.reward = question.reward if question.reward.present?
   end
-
-  def votes_sum
-    self.votes.sum(:value)
-  end
 end

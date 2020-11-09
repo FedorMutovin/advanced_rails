@@ -15,12 +15,12 @@ module Voted
 
   def delete_vote
     vote = @voteable.votes.find_by(user: current_user)
-    return not_delete! unless vote&.destroy
+    return render json: { error: "You can't delete vote"}, status: 403 unless vote&.destroy
   end
 
   def vote(value)
-    return anauthorized! if current_user.author?(@voteable)
-    return wrong_change! if @voteable.votes.find_by(user: current_user)
+    return render json: { error: "You can't vote for your #{model_klass.to_s.downcase}" }, status: 403 if current_user.author?(@voteable)
+    return render json: { error: "You can't vote twice" }, status: 403 if @voteable.votes.find_by(user: current_user)
 
     @voteable.votes.create(user: current_user, value: value)
 
@@ -28,18 +28,6 @@ module Voted
   end
 
   private
-
-  def anauthorized!
-    render json: { error: "You can't vote for your #{model_klass.to_s.downcase}" }, status: 403
-  end
-
-  def wrong_change!
-    render json: { error: "You can't vote twice" }, status: 403
-  end
-
-  def not_delete!
-    render json: { error: "You can't delete vote"}, status: 403
-  end
 
   def model_klass
     controller_name.classify.constantize

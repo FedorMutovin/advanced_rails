@@ -5,7 +5,7 @@ shared_examples 'voted' do
     context 'Not author can vote for question/answer' do
       before { login(other_user) }
 
-      it 'Voting up' do
+      it 'Voting for question/answer' do
         expect { post :vote_for, params: { id: resource }, format: :json }.to change(Vote, :count).by 1
       end
     end
@@ -13,7 +13,7 @@ shared_examples 'voted' do
     context "Author can't vote for question/answer" do
       before { login(user) }
 
-      it 'Voting up error' do
+      it 'Voting for question/answer error' do
         post :vote_for, params: { id: resource }, format: :json
         expect(response).to have_http_status 403
       end
@@ -24,7 +24,7 @@ shared_examples 'voted' do
     context "Not author can't vote against" do
       before { login(other_user) }
 
-      it 'Voting against' do
+      it 'Voting against question/answer' do
         expect { post :vote_against, params: { id: resource }, format: :json }.to change(Vote, :count).by 1
       end
     end
@@ -32,7 +32,7 @@ shared_examples 'voted' do
     context 'Author can not vote against' do
       before { login(user) }
 
-      it 'Voting down error' do
+      it 'Voting against question/answer error' do
         patch :vote_against, params: { id: resource }, format: :json
         expect(response).to have_http_status 403
       end
@@ -41,7 +41,7 @@ shared_examples 'voted' do
 
   describe 'DELETE #delete_vote' do
     let!(:vote) { create(:vote, user: other_user, voteable: resource) }
-    context "Not author can delete his vote" do
+    context "Not author of vote can delete his vote" do
       before { login(other_user) }
 
       it 'delete vote' do
@@ -49,7 +49,7 @@ shared_examples 'voted' do
       end
     end
 
-    context 'Author can not delete vote' do
+    context 'Author of question/answer can not delete vote' do
       before { login(user) }
 
       it 'not delete vote' do

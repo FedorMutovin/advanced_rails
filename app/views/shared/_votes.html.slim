@@ -1,5 +1,5 @@
 div class = "votes_sum-#{resource.id}"
-  = resource.votes_sum
+  = resource.votes.sum(:value)
 - if resource.votes.find_by(user: current_user).nil?
   - if current_user.present? && !current_user.author?(resource)
     = link_to 'Vote for', polymorphic_path([:vote_for, resource]), method: :post, remote: true,
