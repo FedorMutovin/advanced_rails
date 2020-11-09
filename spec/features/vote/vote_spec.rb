@@ -40,6 +40,21 @@ feature 'User can vote for the correct answer/question', %q{
 
       expect(page).to have_content '-1'
     end
+
+    scenario "can't vote twice", js:true do
+      click_on 'Vote for'
+
+      expect(page).to_not have_content "Vote for"
+      expect(page).to_not have_content "Vote against"
+    end
+
+    scenario "can re-vote", js:true do
+      click_on 'Vote for'
+      click_on 'Delete my vote'
+      click_on 'Vote against'
+
+      expect(page).to have_content "-1"
+    end
   end
 
   describe 'Author of resource' do
@@ -49,7 +64,6 @@ feature 'User can vote for the correct answer/question', %q{
 
     scenario "can't vote for his question" do
       visit questions_path
-      save_and_open_page
       expect(page).to_not have_content 'Vote for'
       expect(page).to_not have_content 'Vote against'
     end

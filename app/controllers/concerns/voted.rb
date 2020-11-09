@@ -2,7 +2,7 @@ module Voted
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_voteable, only: %i[vote_for vote_against]
+    before_action :set_voteable, only: %i[vote_for vote_against delete_vote]
   end
 
   def vote_for
@@ -13,23 +13,33 @@ module Voted
     vote(-1)
   end
 
-  def vote(value)
-    return anauthorized! if current_user.author?(@voteable)
-
-    if vote = @voteable.votes.find_by(user: current_user)
-      vote.update(value: value)
-    else
-      @voteable.votes.create(user: current_user, value: value)
-    end
-
-    render json: { rating: @voteable.votes.sum(:value), id: @voteable.id }
+  def delete_vote
+    vote = @voteable.votes.find_by(user: current_user)
+    return not_delete! unless vote&.destroy
   end
 
-  def anauthorized!
-    render json: { error: "You can not vote for your #{model_klass.to_s.downcase}" }, status: 403
+  def vote(value)
+    return anauthorized! if current_user.author?(@voteable)
+    return wrong_change! if @voteable.votes.find_by(user: current_user)
+
+    @voteable.votes.create(user: current_user, value: value)
+
+    render json: { votes_sum: @voteable.votes.sum(:value), id: @voteable.id }
   end
 
   private
+
+  def anauthorized!
+    render json: { error: "You can't vote for your #{model_klass.to_s.downcase}" }, status: 403
+  end
+
+  def wrong_change!
+    render json: { error: "You can't vote twice" }, status: 403
+  end
+
+  def not_delete!
+    render json: { error: "You can't delete vote"}, status: 403
+  end
 
   def model_klass
     controller_name.classify.constantize
