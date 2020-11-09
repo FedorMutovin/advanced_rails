@@ -1,0 +1,7 @@
+div class = "votes_sum-#{resource.id}"
+  = resource.votes_sum
+  - if current_user.present? && !current_user.author?(resource)
+    = link_to 'Vote for', polymorphic_path([:vote_for, resource]), method: :post, remote: true,
+            data: {type: 'json'}, class: 'vote_for'
+    = link_to 'Vote against', polymorphic_path([:vote_against, resource]), method: :post, remote: true,
+            data: {type: 'json'}, class: 'vote_against'
