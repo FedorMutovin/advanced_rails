@@ -2,6 +2,7 @@ class AnswersController < ApplicationController
   before_action :set_question, only: %i[new create destroy]
   before_action :set_answer, only: %i[destroy update mark_best]
   before_action :set_answer_question, only: %i[destroy update mark_best]
+  after_action :publish_answer, only: [:create]
 
   include Voted
 
@@ -40,5 +41,21 @@ class AnswersController < ApplicationController
 
   def set_answer_question
     @question = @answer.question
+  end
+
+  def publish_answer
+    return if @answer.errors.any?
+
+    renderer = ApplicationController.renderer_with_signed_in_user(current_user)
+
+    @question = @answer.question
+
+    AnswersChannel.broadcast_to(
+        @question,
+        {
+            author_id: @answer.author.id,
+            body: renderer.render(partial: 'answers/guest_answer', locals: { answer: @answer })
+        }
+    )
   end
 end

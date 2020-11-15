@@ -14,7 +14,8 @@ RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question, author: user) }
 
   describe 'GET #new' do
-    before { get :new, params: { question_id: question } }
+    before { sign_in(user)}
+    before { get :new, params: { question_id: question }}
 
     it 'renders new view' do
       expect(response).to render_template :new
@@ -50,11 +51,6 @@ RSpec.describe AnswersController, type: :controller do
     context 'without sign in' do
       it 'does not save the answer' do
         expect { post :create, params: { question_id: question, answer: attributes_for(:answer), author: user }, format: :js }.to_not change(Answer, :count)
-      end
-
-      it 'render create view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer), author: user, format: :js }
-        expect(response).to render_template :create
       end
     end
   end
@@ -111,11 +107,6 @@ RSpec.describe AnswersController, type: :controller do
     context 'without sign in' do
       it 'deletes the answer' do
         expect { delete :destroy, params: { id: answer, question_id: question }, format: :js }.to_not change(Answer, :count)
-      end
-
-      it 'render parent question' do
-        delete :destroy, params: { id: answer, question_id: question }, format: :js
-        expect(response).to render_template :destroy
       end
     end
   end
