@@ -1,4 +1,6 @@
 class Answer < ApplicationRecord
+  include Commentable
+
   has_many :links, dependent: :destroy, as: :linkable
   has_many :votes, dependent: :destroy, as: :voteable
   belongs_to :question
