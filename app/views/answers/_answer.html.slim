@@ -1,27 +1,26 @@
-div.answer-channel-provider data-channel-id=answer.to_gid_param data-answer-id="#{answer.id}"
-  - if answer.best
-    p This is best answer
-    .reward
-      = render answer.reward if answer.reward.present?
-  p id = "answer-#{answer.id}"
-    .answer-files
-      = render 'shared/files', resource: answer
-    = answer.body
-    .answer-links
-      = render 'shared/links', resource: answer
-    .answer-comments
-      = render answer.comments
-    - if user_signed_in?
-      = render 'comments/form', resource: answer
-    - if user_signed_in? && current_user&.author?(answer)
-      = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-      = link_to 'Delete', answer_path(answer), method: :delete, remote: true
-      = link_to 'Best answer', mark_best_answer_path(answer), method: :post, remote: true if current_user&.author?(answer.question)
-    = render 'shared/votes', resource: answer
-  = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
-    = f.label :body, 'Your answer'
-    = f.text_area :body
-    = f.label :files
-    = f.file_field :files, multiple: true
-    = render 'links/form', form: f, link_new: Link.new
-    = f.submit 'Save'
+- if answer.best
+  p This is best answer
+  .reward
+    = render answer.reward if answer.reward.present?
+p id = "answer-#{answer.id}"
+  .answer-files
+    = render 'shared/files', resource: answer
+  = answer.body
+  .answer-links
+    = render 'shared/links', resource: answer
+  div class="answer-#{answer.id}-comments"
+    = render answer.comments
+  - if user_signed_in?
+    = render 'comments/form', resource: answer
+  - if user_signed_in? && current_user&.author?(answer)
+    = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+    = link_to 'Delete', answer_path(answer), method: :delete, remote: true
+    = link_to 'Best answer', mark_best_answer_path(answer), method: :post, remote: true if current_user&.author?(answer.question)
+  = render 'shared/votes', resource: answer
+= form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
+  = f.label :body, 'Your answer'
+  = f.text_area :body
+  = f.label :files
+  = f.file_field :files, multiple: true
+  = render 'links/form', form: f, link_new: Link.new
+  = f.submit 'Save'

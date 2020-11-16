@@ -47,6 +47,8 @@ class QuestionsController < ApplicationController
 
   def set_question
     @question ||= params[:id] ? Question.with_attached_files.find(params[:id]) : Question.new
+    gon.question_id = @question.id
+    gon.user_id = current_user.id if current_user
   end
 
   def question_params

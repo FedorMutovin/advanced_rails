@@ -1,32 +1,20 @@
 import consumer from "./consumer"
 
 $(document).on("turbolinks:load", function(e) {
-    const question_id = $("#question-channel-provider").data("id");
-
-    if (question_id) {
-        consumer.subscriptions.create({ channel: "CommentsChannel", id: question_id }, {
-            received(data) {
-                if (gon.user_id !== data.author_id) {
-                    $(`.question-comments`).append(data.body);
-                    window.GistEmbed.init()
-                }
-            }
-        });
-    }
-
-    const answer_ids = $(".answer-channel-provider").toArray().map(elem => $(elem).data("channel-id"))
-    answer_ids.forEach((id) => {
-        subscribeToAnswerChannel(id)
-    })
-})
-
-window.subscribeToAnswerChannel =  function subscribeToAnswerChannel(id) {
-    consumer.subscriptions.create({ channel: "CommentsChannel", id: id }, {
+    consumer.subscriptions.create("CommentsChannel", {
+        connected: function() {
+            return this.perform('follow', {question_id: gon.question_id });
+        },
         received(data) {
-            if (gon.user_id !== data.author_id) {
-                $(`.answer-comments`).append(data.body);
+            if (gon.user_id !== data.user_id) {
+                if (data.resource_type === "answer") {
+                    $(`.${data.resource_type}-${data.resource_id}-comments`).append(data.comment.body);
+                } else {
+                    $(`.${data.resource_type}-comments`).append(data.comment.body)
+                }
                 window.GistEmbed.init()
             }
         }
     });
-}
+})
+

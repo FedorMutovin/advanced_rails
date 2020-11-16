@@ -1,6 +1,5 @@
 class CommentsChannel < ApplicationCable::Channel
-  def subscribed
-    resource = GlobalID::Locator.locate(params[:id])
-    stream_for resource
+  def follow(data)
+    stream_from "comment_question_#{data['question_id']}"
   end
 end

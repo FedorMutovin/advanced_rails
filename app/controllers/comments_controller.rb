@@ -21,16 +21,14 @@ class CommentsController < ApplicationController
   def publish_comment
     return if @comment.errors.any?
 
-    renderer = ApplicationController.renderer_with_signed_in_user(current_user)
+    @question = @resource.class.name.downcase.eql?('question') ? @resource : @resource.question
 
-    CommentsChannel.broadcast_to(
-        @resource,
-        {
-            author_id: @comment.user.id,
-            resource_type: @resource.class.name.downcase,
-            resource_id: @resource.id,
-            body: renderer.render(partial: 'comments/comment', locals: { comment: @comment })
-        }
+    ActionCable.server.broadcast(
+        "comment_question_#{@question.id}",
+        comment: @comment,
+        user_id: current_user.id,
+        resource_id: @resource.id,
+        resource_type: @resource.class.name.downcase
     )
   end
 end

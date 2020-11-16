@@ -1,6 +1,5 @@
 class AnswersChannel < ApplicationCable::Channel
-  def subscribed
-    question = GlobalID::Locator.locate(params[:id])
-    stream_for question
+  def follow(data)
+    stream_from "answer_question_#{data['question_id']}"
   end
 end

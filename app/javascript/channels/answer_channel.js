@@ -1,16 +1,16 @@
 import consumer from "./consumer"
 
 $(document).on("turbolinks:load", function(e) {
-    const question_id = $("#question-channel-provider").data("id");
 
-    if (question_id) {
-        consumer.subscriptions.create({ channel: "AnswersChannel", id: question_id }, {
-            received(data) {
-                if (gon.user_id !== data.author_id) {
-                    $("body").find(".answers").append(data.body);
-                    window.GistEmbed.init()
-                }
+    consumer.subscriptions.create("AnswersChannel", {
+        connected: function() {
+            return this.perform('follow', {question_id: gon.question_id });
+        },
+        received(data) {
+            if (gon.user_id !== data.user_id) {
+                $(".answers").append(data.answer.body);
+                window.GistEmbed.init()
             }
-        });
-    }
+        }
+    });
 })
