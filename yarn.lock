@@ -4548,6 +4548,11 @@ handlebars-loader@^1.7.1:
     loader-utils "1.0.x"
     object-assign "^4.1.0"
 
+handlebars-runtime@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/handlebars-runtime/-/handlebars-runtime-1.0.12.tgz#87b01d857cdbd3e062c807be404b62eb9ae505d2"
+  integrity sha1-h7AdhXzb0+BiyAe+QEti65rlBdI=
+
 handlebars@^4.7.6:
   version "4.7.6"
   resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.6.tgz#d4c05c1baf90e9945f77aa68a7a219aa4a7df74e"

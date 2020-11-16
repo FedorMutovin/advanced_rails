@@ -7,10 +7,11 @@ $(document).on("turbolinks:load", function(e) {
         },
         received(data) {
             if (gon.user_id !== data.user_id) {
+                const template = require("./handlebars/comment.hbs")(data)
                 if (data.resource_type === "answer") {
-                    $(`.${data.resource_type}-${data.resource_id}-comments`).append(data.comment.body);
+                    $(`.${data.resource_type}-${data.resource_id}-comments`).append(template);
                 } else {
-                    $(`.${data.resource_type}-comments`).append(data.comment.body)
+                    $(`.${data.resource_type}-comments`).append(template)
                 }
                 window.GistEmbed.init()
             }

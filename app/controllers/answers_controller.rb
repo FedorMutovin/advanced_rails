@@ -49,6 +49,7 @@ class AnswersController < ApplicationController
     ActionCable.server.broadcast(
         "answer_question_#{@question.id}",
         answer: @answer,
+        links: @answer.links,
         user_id: current_user.id
     )
   end
