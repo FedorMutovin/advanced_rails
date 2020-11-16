@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :answers, foreign_key: 'author_id'
   has_many :rewards, through: :answers
   has_many :votes, dependent: :destroy
+  has_many :comments, dependent: :destroy
 
   def author?(resource)
     id.eql?(resource.author_id)

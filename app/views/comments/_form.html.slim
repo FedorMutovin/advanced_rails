@@ -1,0 +1,8 @@
+.comment-errors
+  = render 'shared/errors', resource: @comment || Comment.new
+
+= form_with model: [resource, resource.comments.new], remote: true,
+        class: "new_#{resource.class.name.downcase}_comment" do |f|
+  = f.label :body, 'Comment'
+  = f.text_area :body
+  = f.submit 'Add comment'

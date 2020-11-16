@@ -8,6 +8,10 @@ p id = "answer-#{answer.id}"
   = answer.body
   .answer-links
     = render 'shared/links', resource: answer
+  div class="answer-#{answer.id}-comments"
+    = render answer.comments
+  - if user_signed_in?
+    = render 'comments/form', resource: answer
   - if user_signed_in? && current_user&.author?(answer)
     = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
     = link_to 'Delete', answer_path(answer), method: :delete, remote: true

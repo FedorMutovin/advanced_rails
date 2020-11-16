@@ -2,6 +2,7 @@ class AnswersController < ApplicationController
   before_action :set_question, only: %i[new create destroy]
   before_action :set_answer, only: %i[destroy update mark_best]
   before_action :set_answer_question, only: %i[destroy update mark_best]
+  after_action :publish_answer, only: [:create]
 
   include Voted
 
@@ -40,5 +41,16 @@ class AnswersController < ApplicationController
 
   def set_answer_question
     @question = @answer.question
+  end
+
+  def publish_answer
+    return if @answer.errors.any?
+
+    ActionCable.server.broadcast(
+        "answer_question_#{@question.id}",
+        answer: @answer,
+        links: @answer.links,
+        user_id: current_user.id
+    )
   end
 end

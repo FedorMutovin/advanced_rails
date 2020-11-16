@@ -8,6 +8,10 @@ class Link < ApplicationRecord
     url.include?("/gist.github.com/")
   end
 
+  def gist_hash
+    url.split('/').last
+  end
+
   def gist
     Octokit::Client.new.gist(url.split('/').last).files.first[1].content if gist?
   end
