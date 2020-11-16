@@ -3,6 +3,8 @@ class AnswersController < ApplicationController
   before_action :set_answer, only: %i[destroy update mark_best]
   before_action :set_answer_question, only: %i[destroy update mark_best]
 
+  include Voted
+
   def new; end
 
   def create
