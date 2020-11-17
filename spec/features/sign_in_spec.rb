@@ -24,4 +24,19 @@ feature 'User can sign in', %q{
     expect(page).to have_content 'Invalid Email or password.'
   end
 
+  describe 'Sign in with ouath services', js: true do
+
+    scenario 'Github' do
+      mock_auth_hash_github
+      click_on 'Sign in with GitHub'
+      expect(page).to have_content 'Successfully authenticated from Github account.'
+    end
+
+    scenario 'Facebook' do
+      mock_auth_hash_facebook
+      click_on 'Sign in with Facebook'
+      expect(page).to have_content 'Successfully authenticated from Facebook account.'
+    end
+  end
+
 end
