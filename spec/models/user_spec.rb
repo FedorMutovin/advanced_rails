@@ -8,6 +8,7 @@ RSpec.describe User, type: :model do
   it { should have_many(:rewards) }
   it { should have_many(:votes).dependent(:destroy) }
   it { should have_many(:comments).dependent(:destroy) }
+  it { should have_many(:authorizations).dependent(:destroy) }
 
   let(:author) { create(:user) }
   let(:author_questions) { create(:question, author: author) }
@@ -31,5 +32,17 @@ RSpec.describe User, type: :model do
 
   it 'User is not author of answer' do
     expect(author).not_to be_author(other_answer)
+  end
+
+  describe '.find_for_ouath' do
+    let!(:user) { create(:user) }
+    let(:auth) { OmniAuth::AuthHash.new(provider: 'github', uid: '123456') }
+    let(:service) { double('Services::FindForOauth') }
+
+    it 'calls Services::FindForOauth' do
+      expect(Services::FindForOauth).to receive(:new).with(auth).and_return(service)
+      expect(service).to receive(:call)
+      User.find_for_oauth(auth)
+    end
   end
 end
