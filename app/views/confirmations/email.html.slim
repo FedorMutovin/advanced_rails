@@ -1,0 +1,7 @@
+= render 'shared/errors', resource: user
+h1 Add your email address for sign in
+=form_with(url: set_email_path, method: "post", local: true) do |f|
+  p
+  = f.label :email
+  = f.email_field :email
+  = f.submit 'Add email'

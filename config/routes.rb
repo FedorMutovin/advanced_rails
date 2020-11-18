@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: 'oauth_callbacks' }
+  devise_scope :user do
+    post 'set_email', to: 'oauth_callbacks#set_email'
+  end
   root to: 'questions#index'
 
   concern :voteable do

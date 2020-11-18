@@ -1,13 +1,11 @@
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :omniauthable, :confirmable, omniauth_providers: [:github, :facebook]
 
 
-  has_many :questions, foreign_key: 'author_id'
-  has_many :answers, foreign_key: 'author_id'
+  has_many :questions, foreign_key: 'author_id', dependent: :destroy
+  has_many :answers, foreign_key: 'author_id', dependent: :destroy
   has_many :rewards, through: :answers
   has_many :votes, dependent: :destroy
   has_many :comments, dependent: :destroy
@@ -22,6 +20,6 @@ class User < ApplicationRecord
   end
 
   def create_authorization(auth)
-    authorizations.create(provider: auth.provider, uid: auth.uid)
+    authorizations.create(provider: auth['provider'], uid: auth['uid']) if persisted?
   end
 end
