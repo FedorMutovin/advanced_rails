@@ -7,6 +7,8 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
     log_in('Facebook')
   end
 
+  private
+
   def log_in(service)
     @user = User.find_for_oauth(request.env['omniauth.auth'])
     if @user&.persisted?

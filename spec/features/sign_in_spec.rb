@@ -25,17 +25,13 @@ feature 'User can sign in', %q{
   end
 
   describe 'Sign in with ouath services', js: true do
+    %w[GitHub Facebook].each do |network|
 
-    scenario 'Github' do
-      mock_auth_hash_github
-      click_on 'Sign in with GitHub'
-      expect(page).to have_content 'Successfully authenticated from Github account.'
-    end
-
-    scenario 'Facebook' do
-      mock_auth_hash_facebook
-      click_on 'Sign in with Facebook'
-      expect(page).to have_content 'Successfully authenticated from Facebook account.'
+      scenario network do
+        mock_auth_hash(network)
+        click_on "Sign in with #{network}"
+        expect(page).to have_content "Successfully authenticated from #{network} account."
+      end
     end
   end
 
