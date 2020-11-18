@@ -1,30 +1,29 @@
 require 'rails_helper'
 
-feature 'User can edit his question', %q{
+describe 'User can edit his question', "
   In order to correct mistakes
   As an author of question
   I'd like to be able to edit my question
-} do
+" do
+  let!(:user) { create(:user) }
+  let(:other_user) { create(:user) }
+  let!(:question) { create(:question, author: user) }
+  let!(:other_question) { create(:question, author: other_user) }
+  let(:url) { 'https://123/' }
 
-  given!(:user) { create(:user) }
-  given(:other_user) { create(:user) }
-  given!(:question) { create(:question, author: user) }
-  given!(:other_question) { create(:question, author: other_user) }
-  given(:url) { 'https://123/' }
-
-  scenario 'Unauthenticated can not edit question' do
+  it 'Unauthenticated can not edit question' do
     visit questions_path
 
-    expect(page).to_not have_link 'Edit'
+    expect(page).not_to have_link 'Edit'
   end
 
   describe 'Authenticated user' do
-    background do
+    before do
       sign_in user
       visit questions_path
     end
 
-    scenario 'edits his question', js:true do
+    it 'edits his question', js: true do
       click_on 'Edit'
 
       within '.questions' do
@@ -32,15 +31,15 @@ feature 'User can edit his question', %q{
         fill_in 'Question body', with: 'edited body'
         click_on 'Save'
 
-        expect(page).to_not have_content question.body
-        expect(page).to_not have_content question.title
+        expect(page).not_to have_content question.body
+        expect(page).not_to have_content question.title
         expect(page).to have_content 'edited title'
         expect(page).to have_content 'edited body'
-        expect(page).to_not have_selector 'textarea'
+        expect(page).not_to have_selector 'textarea'
       end
     end
 
-    scenario 'edits his question with errors', js:true do
+    it 'edits his question with errors', js: true do
       click_on 'Edit'
 
       within '.questions' do
@@ -54,14 +53,13 @@ feature 'User can edit his question', %q{
 
       expect(page).to have_content "Body can't be blank"
       expect(page).to have_content "Title can't be blank"
-
     end
 
-    scenario "tries to edit other user's question" do
-      expect(page).to_not have_css("a[data-question-id='#{other_question.id}']")
+    it "tries to edit other user's question" do
+      expect(page).not_to have_css("a[data-question-id='#{other_question.id}']")
     end
 
-    scenario 'edits his question with attached files', js:true do
+    it 'edits his question with attached files', js: true do
       click_on 'Edit'
 
       within '.questions' do
@@ -77,7 +75,7 @@ feature 'User can edit his question', %q{
       expect(page).to have_link 'spec_helper.rb'
     end
 
-    scenario 'edits his question with links', js:true do
+    it 'edits his question with links', js: true do
       click_on 'Edit'
 
       within '.questions' do
@@ -93,7 +91,5 @@ feature 'User can edit his question', %q{
 
       expect(page).to have_link 'My Gist', href: url
     end
-
   end
-
 end

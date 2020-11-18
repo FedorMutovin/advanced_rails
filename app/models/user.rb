@@ -1,8 +1,7 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :omniauthable, :confirmable, omniauth_providers: [:github, :facebook]
-
+         :omniauthable, :confirmable, omniauth_providers: %i[github facebook]
 
   has_many :questions, foreign_key: 'author_id', dependent: :destroy
   has_many :answers, foreign_key: 'author_id', dependent: :destroy
@@ -12,7 +11,7 @@ class User < ApplicationRecord
   has_many :authorizations, dependent: :destroy
 
   def self.find_for_oauth(auth)
-    Services::FindForOauth.new(auth).call
+    FindForOauth.new(auth).call
   end
 
   def author?(resource)

@@ -1,23 +1,23 @@
 require 'rails_helper'
 
-feature 'User can add links to answer', %q{
+describe 'User can add links to answer', "
   In order to provide additional info to my answer
   As an question's author
   I'd like to be able to add links
-} do
-  given(:user) { create(:user) }
-  given(:question) { create(:question, author: user) }
-  given(:answer) { create(:answer, question: question, author: user) }
-  given!(:gist_link) { create(:gist_link, linkable: answer) }
-  given(:url) { 'https://123/' }
+" do
+  let(:user) { create(:user) }
+  let(:question) { create(:question, author: user) }
+  let(:answer) { create(:answer, question: question, author: user) }
+  let!(:gist_link) { create(:gist_link, linkable: answer) }
+  let(:url) { 'https://123/' }
 
-  background do
+  before do
     sign_in(user)
     visit question_path(question)
   end
 
   describe 'User' do
-    scenario 'adds link when give an answer', js: true do
+    it 'adds link when give an answer', js: true do
       fill_in 'Body', with: 'text text text'
 
       fill_in 'Link name', with: 'My Gist'
@@ -25,19 +25,17 @@ feature 'User can add links to answer', %q{
 
       click_on 'Answer'
 
-
       expect(page).to have_link 'My Gist', href: url
     end
 
-    scenario 'adds invalid url', js: true do
+    it 'adds invalid url', js: true do
       fill_in 'Url', with: 'abc'
       click_on 'Answer'
 
       expect(page).to have_content 'Links url is not a valid URL'
     end
 
-    scenario 'can see gist content', js: true do
-
+    it 'can see gist content', js: true do
       within '.answers' do
         expect(page).to have_content gist_link.gist
       end

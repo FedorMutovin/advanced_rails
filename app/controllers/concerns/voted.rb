@@ -15,12 +15,12 @@ module Voted
 
   def delete_vote
     vote = @voteable.votes.find_by(user: current_user)
-    return render json: { error: "You can't delete vote"}, status: 403 unless vote&.destroy
+    render json: { error: "You can't delete vote" }, status: :forbidden unless vote&.destroy
   end
 
   def vote(value)
-    return render json: { error: "You can't vote for your #{model_klass.to_s.downcase}" }, status: 403 if current_user.author?(@voteable)
-    return render json: { error: "You can't vote twice" }, status: 403 if @voteable.votes.find_by(user: current_user)
+    return render json: { error: "You can't vote for your #{model_klass.to_s.downcase}" }, status: :forbidden if current_user.author?(@voteable)
+    return render json: { error: "You can't vote twice" }, status: :forbidden if @voteable.votes.find_by(user: current_user)
 
     @voteable.votes.create(user: current_user, value: value)
 

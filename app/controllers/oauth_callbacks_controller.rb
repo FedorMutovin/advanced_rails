@@ -22,7 +22,7 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
       sign_in_and_redirect @user, event: :authentication
       set_flash_message(:notice, :success, kind: service['provider'].capitalize) if is_navigational_format? && service
     elsif @user&.persisted? && !@user&.confirmed_at?
-      flash[:alert] = "You need to confirm your email"
+      flash[:alert] = 'You need to confirm your email'
       redirect_to new_user_session_path
     elsif service
       render 'confirmations/email', locals: { provider: session['omniauth.auth']['provider'], user: @user }
