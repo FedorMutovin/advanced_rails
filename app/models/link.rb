@@ -5,7 +5,7 @@ class Link < ApplicationRecord
   validates :url, url: true
 
   def gist?
-    url.include?("/gist.github.com/")
+    url.include?('/gist.github.com/')
   end
 
   def gist_hash

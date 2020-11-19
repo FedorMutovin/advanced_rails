@@ -28,7 +28,7 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:body, :author, files: [], links_attributes: [:name, :url])
+    params.require(:answer).permit(:body, :author, files: [], links_attributes: %i[name url])
   end
 
   def set_question
@@ -47,10 +47,10 @@ class AnswersController < ApplicationController
     return if @answer.errors.any?
 
     ActionCable.server.broadcast(
-        "answer_question_#{@question.id}",
-        answer: @answer,
-        links: @answer.links,
-        user_id: current_user.id
+      "answer_question_#{@question.id}",
+      answer: @answer,
+      links: @answer.links,
+      user_id: current_user.id
     )
   end
 end

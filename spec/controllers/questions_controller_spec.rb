@@ -12,13 +12,14 @@ RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question, author: user) }
 
   describe 'GET #index' do
-    let(:questions) { create_list(:question, 3, author: user)}
+    let(:questions) { create_list(:question, 3, author: user) }
 
     before { get :index }
 
     it 'get all questions' do
       expect(assigns(:questions)).to match_array(questions)
     end
+
     it 'render index view' do
       expect(response).to render_template :index
     end
@@ -43,7 +44,7 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'GET #new' do
     before { login(user) }
 
-    before { get :new}
+    before { get :new }
 
     it 'assigns a new Question to @question' do
       expect(assigns(:question)).to be_a_new(Question)
@@ -63,12 +64,13 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
-
     context 'with valid attributes' do
       before { login(user) }
+
       it 'saves a new question in the database' do
         expect { post :create, params: { question: attributes_for(:question), author: user } }.to change(Question, :count).by(1)
       end
+
       it 'redirects to show view' do
         post :create, params: { question: attributes_for(:question), author: user }
         expect(response).to redirect_to assigns(:question)
@@ -77,9 +79,11 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with invalid attributes' do
       before { login(user) }
+
       it 'does not save the question' do
-        expect { post :create, params: { question: attributes_for(:question, :invalid) } }.to_not change(Question, :count)
+        expect { post :create, params: { question: attributes_for(:question, :invalid) } }.not_to change(Question, :count)
       end
+
       it 're-renders new view' do
         post :create, params: { question: attributes_for(:question, :invalid) }
         expect(response).to render_template :new
@@ -88,7 +92,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'without sign in' do
       it 'does not save the question' do
-        expect { post :create, params: { question: attributes_for(:question), author: user } }.to_not change(Question, :count)
+        expect { post :create, params: { question: attributes_for(:question), author: user } }.not_to change(Question, :count)
       end
 
       it 'redirect to sign in' do
@@ -100,6 +104,7 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'PATCH #update' do
     before { login(user) }
+
     context 'with valid attributes' do
       it 'saves a new question in the database' do
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
@@ -108,6 +113,7 @@ RSpec.describe QuestionsController, type: :controller do
         expect(question.title).to eq 'new title'
         expect(question.body).to eq 'new body'
       end
+
       it 'renders update view' do
         patch :update, params: { id: question, question: attributes_for(:question) }, format: :js
         expect(response).to render_template :update
@@ -127,7 +133,6 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response).to render_template :update
       end
     end
-
   end
 
   describe 'DELETE #destroy' do
@@ -148,7 +153,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'without sign in' do
       it 'does not delete the question' do
-        expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
+        expect { delete :destroy, params: { id: question } }.not_to change(Question, :count)
       end
 
       it 'redirect to sign in' do

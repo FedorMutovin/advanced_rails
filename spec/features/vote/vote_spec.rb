@@ -1,77 +1,77 @@
 require 'rails_helper'
 
-feature 'User can vote for the correct answer/question', %q{
+describe 'User can vote for the correct answer/question', "
   In order to mark the correct answer/questi
   As an authenticated user
   I'd like to be able to vote for the correct answer/question
-} do
-  given(:user) { create(:user) }
-  given(:other_user) { create(:user) }
-  given(:question) { create(:question, author: user) }
-  given!(:answer) { create(:answer, question: question, author: user) }
+" do
+  let(:user) { create(:user) }
+  let(:other_user) { create(:user) }
+  let(:question) { create(:question, author: user) }
+  let!(:answer) { create(:answer, question: question, author: user) }
 
   describe 'Unauthenticated user' do
-    scenario 'Unauthenticated can not vote for question' do
+    it 'Unauthenticated can not vote for question' do
       visit questions_path
-      expect(page).to_not have_content 'Vote for'
-      expect(page).to_not have_content 'Vote against'
+      expect(page).not_to have_content 'Vote for'
+      expect(page).not_to have_content 'Vote against'
     end
 
-    scenario 'Unauthenticated can not vote for answer' do
+    it 'Unauthenticated can not vote for answer' do
       visit question_path(question)
-      expect(page).to_not have_content 'Vote for'
-      expect(page).to_not have_content 'Vote against'
+      expect(page).not_to have_content 'Vote for'
+      expect(page).not_to have_content 'Vote against'
     end
   end
 
   describe 'Authenticated user' do
-    background do
+    before do
       sign_in(other_user)
     end
 
-    scenario 'can vote for question', js:true do
+    it 'can vote for question', js: true do
       click_on 'Vote for'
 
       expect(page).to have_content '1'
     end
 
-    scenario 'can vote against question', js:true do
+    it 'can vote against question', js: true do
       click_on 'Vote against'
 
       expect(page).to have_content '-1'
     end
 
-    scenario "can't vote twice", js:true do
+    it "can't vote twice", js: true do
       click_on 'Vote for'
 
-      expect(page).to_not have_content "Vote for"
-      expect(page).to_not have_content "Vote against"
+      expect(page).not_to have_content 'Vote for'
+      expect(page).not_to have_content 'Vote against'
     end
 
-    scenario "can re-vote", js:true do
+    it 'can re-vote', js: true do
       click_on 'Vote for'
       click_on 'Delete my vote'
       click_on 'Vote against'
 
-      expect(page).to have_content "-1"
+      expect(page).to have_content '-1'
     end
   end
 
   describe 'Author of resource' do
-    background do
+    before do
       sign_in(user)
     end
 
-    scenario "can't vote for his question" do
+    it "can't vote for his question" do
       visit questions_path
-      expect(page).to_not have_content 'Vote for'
-      expect(page).to_not have_content 'Vote against'
+      expect(page).not_to have_content 'Vote for'
+      expect(page).not_to have_content 'Vote against'
     end
 
-    scenario "can't vote for his answer" do
+    it "can't vote for his answer" do
       visit question_path(question)
-      expect(page).to_not have_content 'Vote for'
-      expect(page).to_not have_content 'Vote against'
+      expect(page).not_to have_content 'Vote for'
+      expect(page).not_to have_content 'Vote against'
     end
   end
 end

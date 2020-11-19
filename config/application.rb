@@ -20,11 +20,11 @@ module Qna
     config.autoload_paths += [config.root.join('app')]
 
     config.generators do |g|
-          g.test_framework :rspec,
-                           view_specs: false,
-                           helper_specs: false,
-                           routing_specs: false,
-                           request_specs: false
-        end
+      g.test_framework :rspec,
+                       view_specs: false,
+                       helper_specs: false,
+                       routing_specs: false,
+                       request_specs: false
+    end
   end
 end

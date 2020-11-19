@@ -20,10 +20,9 @@ RSpec.describe LinksController, type: :controller do
       before { sign_in(other_user) }
 
       it 'is not deletes the question file' do
-        expect { delete :destroy, params: { id: link.id }, format: :js }.to_not change(question.links, :count)
+        expect { delete :destroy, params: { id: link.id }, format: :js }.not_to change(question.links, :count)
         expect(response).to render_template :destroy
       end
-
     end
   end
 end
