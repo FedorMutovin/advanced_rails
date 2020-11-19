@@ -52,6 +52,8 @@ jobs:
         run: |
           bundler exec rails db:create RAILS_ENV=test
           bundler exec rails db:migrate RAILS_ENV=test
+        env:
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
       - name: Run tests
         run: bundle exec rspec
       - name: Upload coverage results
