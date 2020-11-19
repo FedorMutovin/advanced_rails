@@ -59,7 +59,9 @@ jobs:
           POSTGRES_PASSWORD: ${{ env.POSTGRESQL_PASSWORD }}
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
       - name: Run tests
-        run: COVERAGE=true bundle exec rspec  --require rails_helper
+        run: |
+          bundle exec rails webpacker:compile
+          COVERAGE=true bundle exec rspec  --require rails_helper
         env:
           RAILS_ENV: test
           POSTGRES_USER: ${{ env.POSTGRESQL_USERNAME }}
