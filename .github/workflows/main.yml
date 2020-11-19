@@ -42,6 +42,37 @@ jobs:
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+      - name: Get Yarn Cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache Node Modules
+        id: node-modules-cache
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Cache Gems
+        id: gem-cache
+        uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gem-
+      - name: Cache Assets
+        id: assets-cache
+        uses: actions/cache@v1
+        with:
+          path: public/packs-test
+          key: ${{ runner.os }}-assets-${{ steps.extract_branch.outputs.branch }}
+          restore-keys: |
+            ${{ runner.os }}-assets-
       - name: Install postgres client
         run: sudo apt-get install libpq-dev
       - name: Install dependencies
@@ -58,6 +89,16 @@ jobs:
           POSTGRES_USER: ${{ env.POSTGRESQL_USERNAME }}
           POSTGRES_PASSWORD: ${{ env.POSTGRESQL_PASSWORD }}
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+      - name: Yarn Install
+        run: bin/rails yarn:install
+      - name: Compile Webpacker
+        shell: bash
+        run: |
+          if [[ ! -d public/packs-test ]]; then
+            bundle exec rails webpacker:compile
+          else
+            echo "No need to compile assets."
+          fi
       - name: Run tests
         run: COVERAGE=true bundle exec rspec  --require rails_helper
         env:
