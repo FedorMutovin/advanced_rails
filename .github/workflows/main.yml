@@ -59,6 +59,8 @@ jobs:
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
       - name: Run tests
         run: bundle exec rspec
+        env:
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
       - name: Upload coverage results
         uses: actions/upload-artifact@master
         if: always()
