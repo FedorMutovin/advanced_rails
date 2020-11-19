@@ -272,13 +272,13 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   config.omniauth :github,
-                  Rails.application.credentials[Rails.env.to_sym][:github][:app_id] || ENV["GITHUB_APP_ID"],
-                  Rails.application.credentials[Rails.env.to_sym][:github][:app_secret] || ENV["GITHUB_APP_SECRET"],
+                  Rails.application.credentials[Rails.env.to_sym][:github][:app_id] || ENV['GITHUB_APP_ID'],
+                  Rails.application.credentials[Rails.env.to_sym][:github][:app_secret] || ENV['GITHUB_APP_SECRET'],
                   scope: 'user:email, read:user'
 
   config.omniauth :facebook,
-                  Rails.application.credentials[Rails.env.to_sym][:facebook][:app_id] || ENV["FACEBOOK_APP_ID"],
-                  Rails.application.credentials[Rails.env.to_sym][:facebook][:app_secret] || ENV["FACEBOOK_APP_SECRET"],
+                  Rails.application.credentials[Rails.env.to_sym][:facebook][:app_id] || ENV['FACEBOOK_APP_ID'],
+                  Rails.application.credentials[Rails.env.to_sym][:facebook][:app_secret] || ENV['FACEBOOK_APP_SECRET'],
                   scope: 'email, public_profile'
 
   # ==> Warden configuration
