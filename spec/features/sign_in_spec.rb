@@ -54,15 +54,6 @@ describe 'User can sign in', "
         end
 
         context "#{network} not return email" do
-          it 'user type email yourself' do
-            mock_auth_hash(network.downcase, email: nil)
-            click_on "Sign in with #{network}"
-            expect(page).to have_content 'Email'
-            fill_in 'Email', with: 'new@mail.com'
-            click_on 'Add email'
-            expect(page).to have_content 'You need to confirm your email'
-          end
-
           it 'user try type exist email' do
             mock_auth_hash(network.downcase, email: nil)
             click_on "Sign in with #{network}"
