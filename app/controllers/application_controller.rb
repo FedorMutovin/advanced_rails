@@ -4,9 +4,9 @@ class ApplicationController < ActionController::Base
 
   def self.renderer_with_signed_in_user(user)
     ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
-    proxy = Warden::Proxy.new({}, Warden::Manager.new({})).tap { |i|
+    proxy = Warden::Proxy.new({}, Warden::Manager.new({})).tap do |i|
       i.set_user(user, scope: :user, store: false, run_callbacks: false)
-    }
+    end
     renderer.new('warden' => proxy)
   end
 

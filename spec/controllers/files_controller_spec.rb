@@ -19,10 +19,9 @@ RSpec.describe FilesController, type: :controller do
       before { sign_in(other_user) }
 
       it 'is not deletes the question file' do
-        expect { delete :destroy, params: { id: question.files.first }, format: :js }.to_not change(question.files, :count)
+        expect { delete :destroy, params: { id: question.files.first }, format: :js }.not_to change(question.files, :count)
         expect(response).to render_template :destroy
       end
-
     end
   end
 end

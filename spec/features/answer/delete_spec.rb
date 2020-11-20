@@ -1,37 +1,36 @@
 require 'rails_helper'
 
-feature 'User can delete answer', %q{
+describe 'User can delete answer', "
   If I need to delete my answer
   As an authenticated user
   I'd like to be able to delete my answer
-} do
-
-  given(:user) { create(:user) }
-  given(:question) { create(:question, author: user) }
-  given!(:answer) { create(:answer, question: question, author: user ) }
-  given(:other_user) { create(:user) }
+" do
+  let(:user) { create(:user) }
+  let(:question) { create(:question, author: user) }
+  let!(:answer) { create(:answer, question: question, author: user) }
+  let(:other_user) { create(:user) }
 
   describe 'Authorized user' do
-    background do
+    before do
       sign_in(user)
       visit question_path(question)
     end
 
-    scenario 'delete answer', js:true do
+    it 'delete answer', js: true do
       click_on 'Delete'
-      expect(page).to_not have_content answer.body
+      expect(page).not_to have_content answer.body
     end
 
-    scenario 'delete other user answer', js:true do
+    it 'delete other user answer', js: true do
       other_answer = create(:answer, question: question, author: other_user)
-      expect(page).to_not have_selector(:css, "a[href='#{answer_path(other_answer)}']")
+      expect(page).not_to have_selector(:css, "a[href='#{answer_path(other_answer)}']")
     end
   end
 
   describe 'Unauthorized user' do
-    scenario 'delete question' do
+    it 'delete question' do
       visit questions_path
-      expect(page).to_not have_content 'Delete'
+      expect(page).not_to have_content 'Delete'
     end
   end
 end

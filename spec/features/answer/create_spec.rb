@@ -1,35 +1,36 @@
 require 'rails_helper'
 
-feature 'User can create answer to the question', %q{
+describe 'User can create answer to the question', "
  If that's a question I can answer
  As an authenticated user
  I'd like to be to answer the question
-} do
-  given(:user) { create(:user) }
-  given(:question) { create(:question, author: user) }
-  given(:answer) { create(:answer, question: question, author: user)}
+" do
+  let(:user) { create(:user) }
+  let(:question) { create(:question, author: user) }
+  let(:answer) { create(:answer, question: question, author: user) }
 
   describe 'Authenticated user' do
-    background do
+    before do
       sign_in(user)
       visit question_path(question)
     end
-    scenario 'create answer', js:true do
+
+    it 'create answer', js: true do
       fill_in 'Body', with: answer.body
       click_on 'Answer'
 
-      expect(current_path).to eq question_path(question)
+      expect(page).to have_current_path question_path(question), ignore_query: true
       within '.answers' do
         expect(page).to have_content answer.body
       end
     end
 
-    scenario 'create wrong answer', js:true do
+    it 'create wrong answer', js: true do
       click_on 'Answer'
       expect(page).to have_content "Body can't be blank"
     end
 
-    scenario 'create a answer with attached files', js:true do
+    it 'create a answer with attached files', js: true do
       fill_in 'Body', with: answer.body
 
       attach_file 'File', %W[#{Rails.root}/spec/rails_helper.rb #{Rails.root}/spec/spec_helper.rb]
@@ -39,14 +40,15 @@ feature 'User can create answer to the question', %q{
       expect(page).to have_link 'spec_helper.rb'
     end
   end
-  scenario 'Unauthenticated user create answer' do
+
+  it 'Unauthenticated user create answer' do
     visit question_path(question)
-    expect(page).to_not have_content 'Body'
-    expect(page).to_not have_content 'Answer'
+    expect(page).not_to have_content 'Body'
+    expect(page).not_to have_content 'Answer'
   end
 
-  context "multiple sessions" do
-    scenario "answer appears on another user's page", js:true do
+  context 'multiple sessions' do
+    it "answer appears on another user's page", js: true do
       Capybara.using_session('user') do
         sign_in(user)
         visit question_path(question)

@@ -24,11 +24,11 @@ class CommentsController < ApplicationController
     @question = @resource.class.name.downcase.eql?('question') ? @resource : @resource.question
 
     ActionCable.server.broadcast(
-        "comment_question_#{@question.id}",
-        comment: @comment,
-        user_id: current_user.id,
-        resource_id: @resource.id,
-        resource_type: @resource.class.name.downcase
+      "comment_question_#{@question.id}",
+      comment: @comment,
+      user_id: current_user.id,
+      resource_id: @resource.id,
+      resource_type: @resource.class.name.downcase
     )
   end
 end

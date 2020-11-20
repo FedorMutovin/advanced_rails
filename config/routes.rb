@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: { omniauth_callbacks: 'oauth_callbacks' }
+  devise_scope :user do
+    post 'set_email', to: 'oauth_callbacks#set_email'
+  end
   root to: 'questions#index'
 
   concern :voteable do
@@ -14,8 +17,8 @@ Rails.application.routes.draw do
     resources :comments, shallow: true
   end
 
-  resources :questions, concerns: [:voteable, :commentable] do
-    resources :answers, concerns: [:voteable, :commentable], shallow: true, only: %i[new create destroy update] do
+  resources :questions, concerns: %i[voteable commentable] do
+    resources :answers, concerns: %i[voteable commentable], shallow: true, only: %i[new create destroy update] do
       post :mark_best, on: :member
     end
   end

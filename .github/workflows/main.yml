@@ -1,5 +1,5 @@
 env:
-  RUBY_VERSION: 2.6
+  RUBY_VERSION: 2.5
   POSTGRESQL_USERNAME: postgres
   POSTGRESQL_PASSWORD: postgres
   POSTGRES_DB: postgres
@@ -16,7 +16,13 @@ jobs:
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
       - name: Install Rubocop
-        run: gem install rubocop -v 0.74.0
+        run: gem install rubocop
+      - name: Install rubocop-performance
+        run: gem install rubocop-performance
+      - name: Install rubocop-rails
+        run: gem install rubocop-rails
+      - name: Install rubocop-rspec
+        run: gem install rubocop-rspec
       - name: Check code
         run: rubocop
   rspec-test:
@@ -28,6 +34,11 @@ jobs:
         image: postgres:latest
         ports:
         - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
         env:
           POSTGRES_USER: ${{ env.POSTGRESQL_USERNAME }}
           POSTGRES_PASSWORD: ${{ env.POSTGRESQL_PASSWORD }}
@@ -36,18 +47,32 @@ jobs:
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
-      - name: Install postgres client
-        run: sudo apt-get install libpq-dev
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.0.0
       - name: Install dependencies
         run: |
-          gem install bundler
-          bundler install
-      - name: Create database
+          sudo apt-get -yqq install libpq-dev build-essential libcurl4-openssl-dev
+          gem install bundler:1.17.3
+          bundle install --jobs 4 --retry 3
+          yarn install
+      - name: Setup Database
         run: |
-          bundler exec rails db:create RAILS_ENV=test
-          bundler exec rails db:migrate RAILS_ENV=test
+          cp config/database.yml.github-actions config/database.yml
+          bundler exec rails db:create
+          bundle exec rake db:schema:load
+        env:
+          RAILS_ENV: test
+          POSTGRES_USER: ${{ env.POSTGRESQL_USERNAME }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRESQL_PASSWORD }}
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
       - name: Run tests
-        run: bundle exec rspec
+        run: COVERAGE=true bundle exec rspec  --require rails_helper
+        env:
+          RAILS_ENV: test
+          POSTGRES_USER: ${{ env.POSTGRESQL_USERNAME }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRESQL_PASSWORD }}
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
       - name: Upload coverage results
         uses: actions/upload-artifact@master
         if: always()
