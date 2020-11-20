@@ -67,7 +67,7 @@ RSpec.describe FindForOauth do
     end
 
     context 'provider not return email' do
-      let(:auth) { OmniAuth::AuthHash.new(provider: 'github', uid: '123456', info: { user_email: 'new@user.com' }) }
+      let(:auth) { OmniAuth::AuthHash.new(provider: 'github', uid: '123456', info: { email: 'new@user.com' }) }
 
       it 'oauth_provider not return email' do
         expect { subject.call }.to change(User, :count).by(1)
