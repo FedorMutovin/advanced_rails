@@ -10,7 +10,7 @@ RSpec.describe LinksController, type: :controller do
     context 'if user is author' do
       before { sign_in(user) }
 
-      it 'deletes the question file' do
+      it 'deletes the question link' do
         expect { delete :destroy, params: { id: link.id }, format: :js }.to change(question.links, :count).by(-1)
         expect(response).to render_template :destroy
       end
@@ -19,9 +19,9 @@ RSpec.describe LinksController, type: :controller do
     context 'if user is not author' do
       before { sign_in(other_user) }
 
-      it 'is not deletes the question file' do
+      it "not deletes the question link" do
         expect { delete :destroy, params: { id: link.id }, format: :js }.not_to change(question.links, :count)
-        expect(response).to render_template :destroy
+        expect(response).to redirect_to root_path
       end
     end
   end

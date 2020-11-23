@@ -6,4 +6,4 @@ ul
         code data-gist-id="#{link.gist_hash}"
       - else
         = link_to link.name, link.url
-      = link_to 'Delete link', link_path(link), method: :delete, remote: true if current_user&.author?(resource)
+      = link_to 'Delete link', link_path(link), method: :delete, remote: true if can?(:destroy, link)

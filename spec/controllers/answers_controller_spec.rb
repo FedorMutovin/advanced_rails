@@ -138,7 +138,7 @@ RSpec.describe AnswersController, type: :controller do
         answer.reload
 
         expect(answer.best).not_to eq true
-        expect(response).to render_template :mark_best
+        expect(response).to redirect_to root_path
       end
     end
   end
