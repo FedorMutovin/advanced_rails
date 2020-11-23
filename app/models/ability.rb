@@ -23,11 +23,11 @@ class Ability
     can :read, Reward
 
     can :destroy, ActiveStorage::Attachment do |file|
-      user.author?(file.record)
+      user.id.eql?(file.record.author_id)
     end
 
     can [:vote_for, :vote_against], [Question, Answer] do |voteable|
-      !user.author?(voteable) && !voteable.votes.exists?(user_id: user.id)
+      !user.id.eql?(voteable.author_id) && !voteable.votes.exists?(user_id: user.id)
     end
 
     can :delete_vote, [Question, Answer] do |voteable|

@@ -14,10 +14,6 @@ class User < ApplicationRecord
     FindForOauth.new(auth).call
   end
 
-  def author?(resource)
-    id.eql?(resource.author_id)
-  end
-
   def create_authorization(auth)
     authorizations.create(provider: auth.provider, uid: auth.uid) if persisted?
   end
