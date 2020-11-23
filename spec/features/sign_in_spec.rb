@@ -32,7 +32,7 @@ describe 'User can sign in', "
 
       describe 'Registered user' do
         it 'try to sign in' do
-          mock_auth_hash(network.downcase, email: 'test@mail.ru')
+          mock_auth_hash(network.downcase, email: user.email)
           click_on "Sign in with #{network}"
           expect(page).to have_content "Successfully authenticated from #{network.capitalize} account."
         end
@@ -54,7 +54,7 @@ describe 'User can sign in', "
         end
 
         context "#{network} not return email" do
-          it 'user try type exist email' do
+          it 'try type exist email' do
             mock_auth_hash(network.downcase, email: nil)
             click_on "Sign in with #{network}"
             expect(page).to have_content 'Add your email address for sign in'
