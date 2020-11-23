@@ -20,7 +20,7 @@ RSpec.describe FilesController, type: :controller do
 
       it 'is not deletes the question file' do
         expect { delete :destroy, params: { id: question.files.first }, format: :js }.not_to change(question.files, :count)
-        expect(response).to render_template :destroy
+        expect(response).to redirect_to root_path
       end
     end
   end

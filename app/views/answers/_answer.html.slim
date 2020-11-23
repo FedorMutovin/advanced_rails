@@ -10,12 +10,12 @@ p id = "answer-#{answer.id}"
     = render 'shared/links', resource: answer
   div class="answer-#{answer.id}-comments"
     = render answer.comments
-  - if user_signed_in?
+  - if can?(:create, Comment)
     = render 'comments/form', resource: answer
-  - if user_signed_in? && current_user&.author?(answer)
+  - if can?(:update, answer)
     = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
     = link_to 'Delete', answer_path(answer), method: :delete, remote: true
-    = link_to 'Best answer', mark_best_answer_path(answer), method: :post, remote: true if current_user&.author?(answer.question)
+    = link_to 'Best answer', mark_best_answer_path(answer), method: :post, remote: true if can?(:mark_best, answer)
   = render 'shared/votes', resource: answer
 = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
   = f.label :body, 'Your answer'

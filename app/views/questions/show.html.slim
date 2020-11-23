@@ -7,11 +7,11 @@ p= @question.body
 .question-comments
   p Comments:
   = render @question.comments
-- if user_signed_in?
+- if can?(:create, Comment)
   = render 'comments/form', resource: @question
 .reward
     = render @question.reward if @question.reward.present?
-- if current_user.present?
+- if can?(:create, Answer)
   .answer-errors
     = render 'shared/errors', resource: @answer
   = form_with model: [@question, @answer], class: 'new_answer' do |form|

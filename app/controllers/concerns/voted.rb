@@ -19,7 +19,7 @@ module Voted
   end
 
   def vote(value)
-    return render json: { error: "You can't vote for your #{model_klass.to_s.downcase}" }, status: :forbidden if current_user.author?(@voteable)
+    return render json: { error: "You can't vote for your #{model_klass.to_s.downcase}" }, status: :forbidden unless can?(:vote_for, @voteable)
     return render json: { error: "You can't vote twice" }, status: :forbidden if @voteable.votes.find_by(user: current_user)
 
     @voteable.votes.create(user: current_user, value: value)

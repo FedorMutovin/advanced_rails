@@ -4,6 +4,8 @@ class AnswersController < ApplicationController
   before_action :set_answer_question, only: %i[destroy update mark_best]
   after_action :publish_answer, only: [:create]
 
+  authorize_resource
+
   include Voted
 
   def new; end
@@ -13,16 +15,16 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    @answer.destroy if current_user&.author?(@answer)
+    @answer.destroy
     @answers = @question.answers
   end
 
   def update
-    @answer.update(answer_params) if current_user&.author?(@answer)
+    @answer.update(answer_params)
   end
 
   def mark_best
-    @answer.mark_best if current_user&.author?(@answer.question)
+    @answer.mark_best
   end
 
   private
