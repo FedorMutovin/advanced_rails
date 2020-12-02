@@ -1,23 +1,25 @@
 require 'rails_helper'
 
 describe 'Profiles API', type: :request do
-  let(:headers) {  { "CONTENT_TYPE" => "application/json",
-                     "ACCEPT" => 'application/json' } }
+  let(:headers) do
+    { 'CONTENT_TYPE' => 'application/json',
+      'ACCEPT' => 'application/json' }
+  end
 
   describe 'GET /api/v1/profiles/me' do
-    context 'unauthorized' do
+    context 'when unauthorized' do
       it 'returns 401 status if there is no access_token' do
         get '/api/v1/profiles/me', headers: headers
         expect(response.status).to eq 401
       end
 
       it 'returns 401 status if access_token is invalid' do
-        get '/api/v1//profiles/me', params: { access_token: '1234'}, headers: headers
+        get '/api/v1//profiles/me', params: { access_token: '1234' }, headers: headers
         expect(response.status).to eq 401
       end
     end
 
-    context 'authorized' do
+    context 'when authorized' do
       let(:access_token) { create(:access_token) }
 
       it 'returns 200 status' do

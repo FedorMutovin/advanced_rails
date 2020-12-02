@@ -33,3 +33,5 @@ RSpec/MultipleExpectations:
   Enabled: false
 RSpec/MultipleMemoizedHelpers:
   Max: 10
+Style/ClassAndModuleChildren:
+  Enabled: false

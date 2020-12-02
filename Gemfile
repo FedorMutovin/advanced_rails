@@ -39,6 +39,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'cancancan'
 gem 'cocoon'
 gem 'devise'
+gem 'doorkeeper'
 gem 'gon'
 gem 'octokit', '~> 4.0'
 gem 'omniauth'
@@ -47,7 +48,6 @@ gem 'omniauth-github'
 gem 'slim-rails'
 gem 'validate_url'
 gem 'webpacker'
-gem 'doorkeeper'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
