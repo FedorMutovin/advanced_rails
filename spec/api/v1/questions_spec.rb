@@ -2,11 +2,11 @@ require 'rails_helper'
 
 describe 'Profiles API', type: :request do
   let(:headers) do
-    { 'CONTENT_TYPE' => 'application/json',
-      'ACCEPT' => 'application/json' }
+    { 'ACCEPT' => 'application/json' }
   end
 
   let(:user) { create(:user) }
+  let(:resource) { Question }
   let(:access_token) { create(:access_token) }
 
   describe 'GET /api/v1/questions' do
@@ -90,6 +90,62 @@ describe 'Profiles API', type: :request do
       it_behaves_like 'API resource contains' do
         let(:resource_response) { question_response }
         let(:resource) { question }
+      end
+    end
+  end
+
+  describe 'POST /api/v1/questions' do
+    let(:method) { :post }
+    let(:api_path) { '/api/v1/questions' }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :get }
+    end
+
+    context 'when authorized' do
+      let(:valid_attrs) { { title: 'title', body: 'body' } }
+
+      it_behaves_like 'API Create resource' do
+        let(:invalid_attrs) { { title: '', body: '' } }
+      end
+
+      it 'save question with correct title' do
+        post api_path, params: { question: valid_attrs, access_token: access_token.token }, headers: headers
+        expect(assigns(:question).title).to eq valid_attrs[:title]
+      end
+    end
+  end
+
+  describe 'PATCH /api/v1/questions/:id' do
+    let(:question) { create(:question, :with_files, :with_link, author_id: access_token.resource_owner_id) }
+    let(:api_path) { api_v1_question_path(question) }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :get }
+    end
+
+    context 'when authorized' do
+      let!(:comment) { create(:comment, commentable: question, user: question.author) }
+      let(:valid_attrs) { { title: 'Test question title', body: 'Test question body' } }
+
+      let(:invalid_attrs) { { title: '', body: '' } }
+
+      it_behaves_like 'API Update resource' do
+        let(:method) { :patch }
+      end
+    end
+  end
+
+  describe 'DELETE /api/v1/questions/:id' do
+    let!(:question) { create(:question, :with_files, :with_link, author_id: access_token.resource_owner_id) }
+    let(:api_path) { api_v1_question_path(question) }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :get }
+    end
+    context 'when authorized' do
+      it_behaves_like 'API Destroy resource' do
+        let(:method) { :delete }
       end
     end
   end

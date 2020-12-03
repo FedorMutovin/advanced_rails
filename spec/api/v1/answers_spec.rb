@@ -67,7 +67,7 @@ describe 'Answers API', type: :request do
 
       it_behaves_like 'API resource contains' do
         let(:resource_response) { answer_response }
-        let(:resource) { answer.reload }
+        let(:resource) { answer }
       end
     end
   end
