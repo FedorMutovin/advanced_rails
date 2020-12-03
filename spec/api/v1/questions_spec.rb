@@ -6,6 +6,9 @@ describe 'Profiles API', type: :request do
       'ACCEPT' => 'application/json' }
   end
 
+  let(:user) { create(:user) }
+  let(:access_token) { create(:access_token) }
+
   describe 'GET /api/v1/questions' do
     let(:api_path) { '/api/v1/questions' }
 
@@ -14,8 +17,6 @@ describe 'Profiles API', type: :request do
     end
 
     context 'when authorized' do
-      let(:user) { create(:user) }
-      let(:access_token) { create(:access_token) }
       let!(:questions) { create_list(:question, 2, author: user) }
       let(:question) { questions.first }
       let(:question_response) { json['questions'].first }
@@ -63,13 +64,11 @@ describe 'Profiles API', type: :request do
   end
 
   describe 'GET /api/v1/questions/:id' do
-    let(:user) { create(:user) }
     let(:question) { create(:question, :with_link, :with_files, author: user) }
     let(:answer) { create(:answer, :with_link, :with_files, author: user) }
     let!(:comment) { create(:comment, commentable: question, user: question.author) }
     let(:question_response) { json['question'] }
     let(:api_path) { api_v1_question_path(question) }
-    let(:access_token) { create(:access_token) }
 
     before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
