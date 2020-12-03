@@ -41,4 +41,34 @@ describe 'Answers API', type: :request do
       end
     end
   end
+
+  describe 'GET /api/v1/answers/:id' do
+    let(:answer) { create(:answer, :with_link, :with_files, question: question, author: user) }
+    let!(:comment) { create(:comment, commentable: answer, user: answer.author) }
+    let(:answer_response) { json['answer'] }
+    let(:api_path) { api_v1_answer_path(answer) }
+
+    before { get api_path, params: { access_token: access_token.token }, headers: headers }
+
+    context 'when authorized' do
+      it 'returns 200 status' do
+        expect(response).to be_successful
+      end
+
+      it 'returns only one answer' do
+        expect(json.size).to eq(1)
+      end
+
+      it 'returns all public fields' do
+        %w[id body created_at updated_at].each do |attr|
+          expect(answer_response[attr]).to eq(answer.send(attr).as_json)
+        end
+      end
+
+      it_behaves_like 'API resource contains' do
+        let(:resource_response) { answer_response }
+        let(:resource) { answer.reload }
+      end
+    end
+  end
 end

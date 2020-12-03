@@ -81,10 +81,15 @@ describe 'Profiles API', type: :request do
         expect(json.size).to eq(1)
       end
 
+      it 'returns all public fields' do
+        %w[id title body created_at updated_at].each do |attr|
+          expect(question_response[attr]).to eq(question.send(attr).as_json)
+        end
+      end
+
       it_behaves_like 'API resource contains' do
         let(:resource_response) { question_response }
         let(:resource) { question }
-        let(:resource_attributes) { %w[id title body created_at updated_at] }
       end
     end
   end

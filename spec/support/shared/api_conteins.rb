@@ -14,10 +14,4 @@ shared_examples_for 'API resource contains' do
   it 'contains files url' do
     expect(resource_response['files'].first['url']).to eq rails_blob_path(resource.files.first, only_path: true)
   end
-
-  it 'returns all public fields' do
-    resource_attributes.each do |attr|
-      expect(resource_response[attr]).to eq(resource.send(attr).as_json)
-    end
-  end
 end
