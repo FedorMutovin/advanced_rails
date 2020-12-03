@@ -7,6 +7,7 @@ describe 'Answers API', type: :request do
   let(:user) { create(:user) }
   let(:access_token) { create(:access_token) }
   let(:question) { create(:question, author: user) }
+  let(:resource) { Answer }
 
   describe 'GET /api/v1/answers' do
     let(:api_path) { api_v1_question_answers_path(question) }
@@ -68,6 +69,57 @@ describe 'Answers API', type: :request do
       it_behaves_like 'API resource contains' do
         let(:resource_response) { answer_response }
         let(:resource) { answer }
+      end
+    end
+  end
+
+  describe 'POST /api/v1/answers' do
+    let(:api_path) { api_v1_question_answers_path(question) }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :get }
+    end
+
+    context 'when authorized' do
+      it_behaves_like 'API Create resource' do
+        let(:method) { :post }
+        let(:valid_attrs) { { body: 'body' } }
+        let(:invalid_attrs) { { body: '' } }
+      end
+    end
+  end
+
+  describe 'PATCH /api/v1/answers/:id' do
+    let(:answer) { create(:answer, :with_files, :with_link, question: question, author_id: access_token.resource_owner_id) }
+    let(:api_path) { api_v1_answer_path(answer) }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :get }
+    end
+
+    context 'when authorized' do
+      let!(:comment) { create(:comment, commentable: answer, user: answer.author) }
+      let(:valid_attrs) { { body: 'body', user_id: access_token.resource_owner_id } }
+
+      let(:invalid_attrs) { { body: '' } }
+
+      it_behaves_like 'API Update resource' do
+        let(:method) { :patch }
+      end
+    end
+  end
+
+  describe 'DELETE /api/v1/answers/:id' do
+    let!(:answer) { create(:answer, :with_files, :with_link, question: question, author_id: access_token.resource_owner_id) }
+    let(:api_path) { api_v1_answer_path(answer) }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :get }
+    end
+
+    context 'when authorized' do
+      it_behaves_like 'API Destroy resource' do
+        let(:method) { :delete }
       end
     end
   end

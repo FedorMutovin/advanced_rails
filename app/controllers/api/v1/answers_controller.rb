@@ -1,6 +1,7 @@
 class Api::V1::AnswersController < Api::V1::BaseController
+  before_action :question, only: %i[index create]
   before_action :answers, only: :index
-  before_action :answer, only: :show
+  before_action :answer, only: %i[show update destroy]
   authorize_resource
 
   def index
@@ -11,6 +12,19 @@ class Api::V1::AnswersController < Api::V1::BaseController
     render json: @answer
   end
 
+  def create
+    @answer = @question.answers.new(answer_params.merge(author: current_resource_owner))
+    @answer.save ? head(:ok) : head(422)
+  end
+
+  def update
+    @answer.update(answer_params) ? head(:ok) : head(422)
+  end
+
+  def destroy
+    @answer.destroy ? head(:ok) : head(422)
+  end
+
   private
 
   def question
@@ -18,7 +32,7 @@ class Api::V1::AnswersController < Api::V1::BaseController
   end
 
   def answer
-    @answer ||= params[:id] ? Answer.with_attached_files.find(params[:id]) : answers.build(answer_params)
+    @answer = Answer.with_attached_files.find(params[:id])
   end
 
   def answer_params
@@ -27,6 +41,6 @@ class Api::V1::AnswersController < Api::V1::BaseController
   end
 
   def answers
-    @answers ||= question.answers
+    @answers ||= @question.answers
   end
 end
