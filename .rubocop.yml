@@ -40,3 +40,6 @@ Style/ClassAndModuleChildren:
 
 Naming/FileName:
   Enabled: false
+
+RSpec/LetSetup:
+  Enabled: false

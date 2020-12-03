@@ -61,4 +61,32 @@ describe 'Profiles API', type: :request do
       end
     end
   end
+
+  describe 'GET /api/v1/questions/:id' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question, :with_link, :with_files, author: user) }
+    let(:answer) { create(:answer, :with_link, :with_files, author: user) }
+    let!(:comment) { create(:comment, commentable: question, user: question.author) }
+    let(:question_response) { json['question'] }
+    let(:api_path) { api_v1_question_path(question) }
+    let(:access_token) { create(:access_token) }
+
+    before { get api_path, params: { access_token: access_token.token }, headers: headers }
+
+    context 'when authorized' do
+      it 'returns 200 status' do
+        expect(response).to be_successful
+      end
+
+      it 'returns only one question' do
+        expect(json.size).to eq(1)
+      end
+
+      it_behaves_like 'API resource contains' do
+        let(:resource_response) { question_response }
+        let(:resource) { question }
+        let(:resource_attributes) { %w[id title body created_at updated_at] }
+      end
+    end
+  end
 end
