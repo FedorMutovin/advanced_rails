@@ -1,6 +1,5 @@
-class Api::V1::ProfilesController < ApplicationController
-  before_action :doorkeeper_authorize!
+class Api::V1::ProfilesController < Api::V1::BaseController
   def me
-    head :ok
+    render json: current_resource_owner
   end
 end

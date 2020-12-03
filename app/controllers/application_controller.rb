@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-  before_action :authenticate_user!, unless: :devise_controller?
   before_action :gon_user, unless: :devise_controller?
 
   def self.renderer_with_signed_in_user(user)

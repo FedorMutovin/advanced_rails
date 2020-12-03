@@ -7,6 +7,12 @@ describe 'Profiles API', type: :request do
   end
 
   describe 'GET /api/v1/profiles/me' do
+    let(:api_path) { '/api/v1/profiles/me' }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :get }
+    end
+
     context 'when unauthorized' do
       it 'returns 401 status if there is no access_token' do
         get '/api/v1/profiles/me', headers: headers
@@ -14,17 +20,31 @@ describe 'Profiles API', type: :request do
       end
 
       it 'returns 401 status if access_token is invalid' do
-        get '/api/v1//profiles/me', params: { access_token: '1234' }, headers: headers
+        get '/api/v1/profiles/me', params: { access_token: '1234' }, headers: headers
         expect(response.status).to eq 401
       end
     end
 
     context 'when authorized' do
-      let(:access_token) { create(:access_token) }
+      let(:me) { create(:user) }
+      let(:access_token) { create(:access_token, resource_owner_id: me.id) }
+
+      before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
       it 'returns 200 status' do
-        get '/api/v1/profiles/me', params: { access_token: access_token.token }, headers: headers
         expect(response).to be_successful
+      end
+
+      it 'returns all public fields' do
+        %w[id email created_at updated_at].each do |attr|
+          expect(json[attr]).to eq me.send(attr).as_json
+        end
+      end
+
+      it 'dose not return private fields' do
+        %w[password encrypted_password].each do |attr|
+          expect(json).not_to have_key(attr)
+        end
       end
     end
   end
