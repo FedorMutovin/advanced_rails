@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  use_doorkeeper
   devise_for :users, controllers: { omniauth_callbacks: 'oauth_callbacks' }
   devise_scope :user do
     post 'set_email', to: 'oauth_callbacks#set_email'
@@ -20,6 +21,18 @@ Rails.application.routes.draw do
   resources :questions, concerns: %i[voteable commentable] do
     resources :answers, concerns: %i[voteable commentable], shallow: true, only: %i[new create destroy update] do
       post :mark_best, on: :member
+    end
+  end
+
+  namespace :api do
+    namespace :v1 do
+      resources :profiles, only: [:index] do
+        get :me, on: :collection
+      end
+
+      resources :questions, only: %i[index show create update destroy] do
+        resources :answers, only: %i[index show create update destroy], shallow: true
+      end
     end
   end
 

@@ -31,5 +31,15 @@ RSpec/ExampleLength:
 
 RSpec/MultipleExpectations:
   Enabled: false
+
 RSpec/MultipleMemoizedHelpers:
-  Max: 10
+  Max: 11
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Naming/FileName:
+  Enabled: false
+
+RSpec/LetSetup:
+  Enabled: false

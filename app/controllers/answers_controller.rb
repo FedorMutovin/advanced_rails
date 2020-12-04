@@ -1,4 +1,5 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_question, only: %i[new create destroy]
   before_action :set_answer, only: %i[destroy update mark_best]
   before_action :set_answer_question, only: %i[destroy update mark_best]
