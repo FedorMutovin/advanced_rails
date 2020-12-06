@@ -17,6 +17,8 @@ module Qna
     # the framework and any gems in your application.
     #
 
+    config.active_job.queue_adapter = :sidekiq
+
     config.autoload_paths += [config.root.join('app')]
 
     config.generators do |g|

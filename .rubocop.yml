@@ -43,3 +43,6 @@ Naming/FileName:
 
 RSpec/LetSetup:
   Enabled: false
+
+RSpec/VerifiedDoubles:
+  Enabled: false
