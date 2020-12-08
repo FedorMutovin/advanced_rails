@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Ability
   include CanCan::Ability
 
@@ -17,11 +15,12 @@ class Ability
   def user_abilities
     guest_abilities
     can :me, User, { user_id: user.id }
-    can :create, [Question, Answer, Comment, Vote, Reward]
+    can :create, [Question, Answer, Comment, Vote, Reward, Subscription]
     can %i[update destroy], [Question, Answer], author_id: user.id
     can :mark_best, Answer, question: { author_id: user.id }
     can :destroy, Link, linkable: { author_id: user.id }
     can :read, Reward
+    can :destroy, Subscription, user_id: user.id
 
     can :destroy, ActiveStorage::Attachment do |file|
       user.id.eql?(file.record.author_id)

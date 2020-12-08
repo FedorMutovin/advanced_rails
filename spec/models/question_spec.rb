@@ -19,13 +19,38 @@ RSpec.describe Question, type: :model do
   it { is_expected.to accept_nested_attributes_for :links }
   it { is_expected.to accept_nested_attributes_for :reward }
 
+  let(:user) { create(:user) }
+  let(:other_user) { create(:user) }
+  let(:question) { create(:question, author: user) }
+
   describe 'reputation' do
-    let(:user) { create(:user) }
     let(:question) { build(:question, author: user) }
 
     it 'calls ReputationJob' do
       expect(ReputationJob).to receive(:perform_later).with(question)
       question.save!
+    end
+  end
+
+  describe 'subscribed?' do
+    let!(:subscription) { create(:subscription, question: question, user: user) }
+
+    it 'true' do
+      expect(question).to be_subscribed(user)
+    end
+
+    it 'false' do
+      expect(question).to_not be_subscribed(other_user)
+    end
+  end
+
+  describe 'subscription(user)' do
+    it 'be found' do
+      expect(question.subscription(user)).to eq question.subscriptions.first
+    end
+
+    it 'return nil' do
+      expect(question.subscription(other_user)).to eq nil
     end
   end
 end

@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     resources :answers, concerns: %i[voteable commentable], shallow: true, only: %i[new create destroy update] do
       post :mark_best, on: :member
     end
+    resources :subscriptions, shallow: true, only: %i[create destroy]
   end
 
   namespace :api do
