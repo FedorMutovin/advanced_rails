@@ -9,6 +9,6 @@ RSpec.describe NewAnswersNotificationJob, type: :job do
   it 'calls NewAnswersNotification#send_notification(answer)' do
     allow(NewAnswersNotification).to receive(:new).and_return(service)
     expect(service).to receive(:send_notification).with(question.author, answer)
-    NewAnswersNotificationJob.perform_now(question.author, answer)
+    described_class.perform_now(question.author, answer)
   end
 end

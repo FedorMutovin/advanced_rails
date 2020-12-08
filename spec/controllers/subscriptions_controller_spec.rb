@@ -3,9 +3,13 @@ require 'rails_helper'
 RSpec.describe SubscriptionsController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question, author: user) }
+
   describe 'POST #create' do
-    context 'User authorized' do
-      before { login user }
+    context 'when user authorized' do
+      before do
+        login user
+        delete :destroy, params: { id: question.subscriptions.first, format: :js }
+      end
 
       it 'saves a new subscription in the database' do
         expect do
@@ -14,11 +18,12 @@ RSpec.describe SubscriptionsController, type: :controller do
         expect(response).to render_template :create
       end
     end
-    context 'Guest' do
+
+    context 'when guest' do
       it 'try subscribe to question' do
         expect do
           post :create, params: { question_id: question, format: :js }
-        end.to_not change(question.subscriptions, :count)
+        end.not_to change(question.subscriptions, :count)
       end
 
       it 'status Code: 401 Unauthorized' do
@@ -27,30 +32,33 @@ RSpec.describe SubscriptionsController, type: :controller do
       end
     end
   end
+
   describe 'DELETE #unsubscribe' do
-    let!(:subscription) { create(:subscription, question: question, user: user) }
-    context 'User authorized' do
+    context 'when user authorized' do
       before { login user }
 
       it 'delete a subscription in the database' do
         expect do
-          delete :destroy, params: { id: subscription, format: :js }
+          delete :destroy, params: { id: question.subscriptions.first, format: :js }
         end.to change(question.subscriptions, :count).by(-1)
       end
+
       it 'render unsubscribe view' do
-        delete :destroy, params: { id: subscription, format: :js }
+        delete :destroy, params: { id: question.subscriptions.first, format: :js }
 
         expect(response).to render_template :destroy
       end
     end
-    context 'Guest' do
+
+    context 'when Guest' do
       it 'try unsubscribe to question' do
         expect do
-          delete :destroy, params: { id: question, format: :js }
-        end.to_not change(question.subscriptions, :count)
+          delete :destroy, params: { id: question.subscriptions.first, format: :js }
+        end.not_to change(question.subscriptions, :count)
       end
+
       it 'status Code: 401 Unauthorized' do
-        delete :destroy, params: { id: question, format: :js }
+        delete :destroy, params: { id: question.subscriptions.first, format: :js }
         expect(response.status).to eq 401
       end
     end

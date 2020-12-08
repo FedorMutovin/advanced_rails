@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Question, type: :model do
+  let(:question) { create(:question, author: user) }
+  let(:other_user) { create(:user) }
+  let(:user) { create(:user) }
+
   it_behaves_like 'commentable'
 
   it { is_expected.to have_many(:answers).dependent(:destroy) }
@@ -19,10 +23,6 @@ RSpec.describe Question, type: :model do
   it { is_expected.to accept_nested_attributes_for :links }
   it { is_expected.to accept_nested_attributes_for :reward }
 
-  let(:user) { create(:user) }
-  let(:other_user) { create(:user) }
-  let(:question) { create(:question, author: user) }
-
   describe 'reputation' do
     let(:question) { build(:question, author: user) }
 
@@ -33,14 +33,12 @@ RSpec.describe Question, type: :model do
   end
 
   describe 'subscribed?' do
-    let!(:subscription) { create(:subscription, question: question, user: user) }
-
     it 'true' do
       expect(question).to be_subscribed(user)
     end
 
     it 'false' do
-      expect(question).to_not be_subscribed(other_user)
+      expect(question).not_to be_subscribed(other_user)
     end
   end
 
