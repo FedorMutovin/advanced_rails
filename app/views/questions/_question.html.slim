@@ -1,6 +1,7 @@
 p
   = link_to question.title, question_path(question), method: :get
   = question.body
+  = render 'subscriptions/subscriptions', question: question
   - if can?(:destroy, question)
     = link_to 'Delete', question, method: :delete
     = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }

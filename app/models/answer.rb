@@ -13,11 +13,19 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
+  after_create :send_notification
+
   scope :best, -> { order best: :desc }
 
   def mark_best
     question.answers.update_all(best: false)
     update(best: true)
     self.reward = question.reward if question.reward.present?
+  end
+
+  private
+
+  def send_notification
+    NewAnswersNotificationJob.perform_later(question.author, self)
   end
 end

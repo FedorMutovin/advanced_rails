@@ -1,0 +1,6 @@
+div id = "question-#{question.id}-subscribe-button"
+  -if current_user
+    -if question.subscribed?(current_user)
+      = button_to 'Disable notifications', subscription_path(question.subscription(current_user)), remote: true, method: :delete
+    -else
+      = button_to "Subscribe for new answers notifications", question_subscriptions_path(question), remote: true
