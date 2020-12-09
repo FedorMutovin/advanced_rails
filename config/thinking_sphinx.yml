@@ -1,0 +1,7 @@
+test:
+  mysql41: 9307
+  min_infix_len: 3
+development:
+  address: localhost
+  mysql41: 9306
+  min_infix_len: 3

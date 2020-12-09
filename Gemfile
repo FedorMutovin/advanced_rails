@@ -42,6 +42,7 @@ gem 'cocoon'
 gem 'devise'
 gem 'doorkeeper'
 gem 'gon'
+gem 'mysql2'
 gem 'octokit', '~> 4.0'
 gem 'oj'
 gem 'omniauth'
@@ -50,11 +51,10 @@ gem 'omniauth-github'
 gem 'sidekiq'
 gem 'sinatra', require: false
 gem 'slim-rails'
+gem 'thinking-sphinx'
 gem 'validate_url'
 gem 'webpacker'
 gem 'whenever', require: false
-gem 'mysql2'
-gem 'thinking-sphinx'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -85,6 +85,7 @@ group :test do
   # Easy installation and use of chromedriver to run system tests with Chrome
   gem 'capybara-email'
   gem 'chromedriver-helper'
+  gem 'database_cleaner', '~> 1.8', '>= 1.8.3'
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'shoulda-matchers'
