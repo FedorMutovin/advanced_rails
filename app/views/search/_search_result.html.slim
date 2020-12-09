@@ -3,10 +3,11 @@
   - unless results.empty?
     - results.each do |result|
       - if result.is_a?(Question)
-        p= link_to(result.title, question_path(result), target: '_blank')
+        p= link_to(result.title, question_path(result))
       - elsif result.is_a?(Answer)
-        p= link_to(result.body, question_path(result.question), target: '_blank')
+        p= link_to(result.body, question_path(result.question))
       - elsif result.is_a?(Comment)
-        p= link_to(result.body, question_path(result.commentable), target: '_blank')
+        - question = result.commentable.is_a?(Answer) ? result.commentable.question : result.commentable
+        p= link_to(result.body, question_path(question))
       - else
         p= result.email
