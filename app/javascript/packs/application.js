@@ -1,5 +1,4 @@
 import "gist-embed/dist/gist-embed.min.js"
-import 'stylesheets/application'
 
 require("@rails/ujs").start()
 require("turbolinks").start()
