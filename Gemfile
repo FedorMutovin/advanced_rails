@@ -52,6 +52,7 @@ gem 'sidekiq', '~> 5.2'
 gem 'sinatra', require: false
 gem 'slim-rails'
 gem 'thinking-sphinx'
+gem 'unicorn'
 gem 'validate_url'
 gem 'webpacker'
 gem 'whenever', require: false
@@ -74,6 +75,7 @@ group :development do
   gem 'web-console', '>= 3.3.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'capistrano', require: false
+  gem 'capistrano3-unicorn', require: false
   gem 'capistrano-bundler', require: false
   gem 'capistrano-passenger', require: false
   gem 'capistrano-rails', require: false
