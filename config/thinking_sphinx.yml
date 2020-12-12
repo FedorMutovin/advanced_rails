@@ -6,7 +6,7 @@ development:
   mysql41: 9306
   min_infix_len: 3
 production:
-  pid_file: /home/deployer/qna/shared/pids/searchd.pid
+  pid_file: /home/deployer/qna/shared/tmp/pids/searchd.pid
   indices_location: /home/deployer/qna/shared/db/sphinx
   searchd_file_path: /home/deployer/qna/shared/db/sphinx
   config_file: /home/deployer/qna/shared/config/production.sphinx.conf
