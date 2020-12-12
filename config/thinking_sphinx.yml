@@ -5,5 +5,3 @@ development:
   address: localhost
   mysql41: 9306
   min_infix_len: 3
-production:
-  pid_file: /home/deployer/qna/shared/tmp/pids/searchd.pid
