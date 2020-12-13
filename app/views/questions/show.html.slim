@@ -1,25 +1,26 @@
-h1= @question.title
-p= @question.body
-.question-files
-  = render 'shared/files', resource: @question
-.question-links
-  = render 'shared/links', resource: @question
-.question-comments
-  p Comments:
-  = render @question.comments
-- if can?(:create, Comment)
-  = render 'comments/form', resource: @question
-.reward
-    = render @question.reward if @question.reward.present?
-- if can?(:create, Answer)
-  .answer-errors
-    = render 'shared/errors', resource: @answer
-  = form_with model: [@question, @answer], class: 'new_answer' do |form|
-    = form.label :body
-    = form.text_area :body
-    = form.label :files
-    = form.file_field :files, multiple: true
-    = render 'links/form', form: form, link_new: nil
-    = form.submit 'Answer'
-.answers
-  = render @question.answers
+- cache @question do
+  h1= @question.title
+  p= @question.body
+  .question-files
+    = render 'shared/files', resource: @question
+  .question-links
+    = render 'shared/links', resource: @question
+  .question-comments
+    p Comments:
+    = render @question.comments
+  - if can?(:create, Comment)
+    = render 'comments/form', resource: @question
+  .reward
+      = render @question.reward if @question.reward.present?
+  - if can?(:create, Answer)
+    .answer-errors
+      = render 'shared/errors', resource: @answer
+    = form_with model: [@question, @answer], class: 'new_answer' do |form|
+      = form.label :body
+      = form.text_area :body
+      = form.label :files
+      = form.file_field :files, multiple: true
+      = render 'links/form', form: form, link_new: nil
+      = form.submit 'Answer'
+  .answers
+    = render @question.answers
