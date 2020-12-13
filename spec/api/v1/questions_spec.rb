@@ -19,7 +19,7 @@ describe 'Profiles API', type: :request do
     context 'when authorized' do
       let!(:questions) { create_list(:question, 2, author: user) }
       let(:question) { questions.first }
-      let(:question_response) { json['questions'].last }
+      let(:question_response) { json['questions'].first }
       let!(:answers) { create_list(:answer, 3, question: question, author: user) }
 
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
@@ -34,7 +34,7 @@ describe 'Profiles API', type: :request do
 
       it 'returns all public fields' do
         %w[id title body author_id created_at updated_at].each do |attr|
-          expect(json['questions'].first[attr]).to eq question.send(attr).as_json
+          expect(question_response[attr]).to eq question.send(attr).as_json
         end
       end
 
@@ -48,7 +48,7 @@ describe 'Profiles API', type: :request do
 
       describe 'answers' do
         let(:answer) { answers.first }
-        let(:answer_response) { question_response['answers'].last }
+        let(:answer_response) { question_response['answers'].first }
 
         it 'returns list of answers' do
           expect(question_response['answers'].size).to eq 3
