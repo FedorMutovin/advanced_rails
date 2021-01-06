@@ -19,7 +19,7 @@ describe 'Answers API', type: :request do
     context 'when authorized' do
       let!(:answers) { create_list(:answer, 2, question: question, author: user) }
       let(:answer) { answers.first }
-      let(:answer_response) { json['answers'].first }
+      let(:answer_response) { json['answers'].min_by { |hash| hash['id'].to_i } }
 
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 

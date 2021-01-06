@@ -52,6 +52,7 @@ jobs:
           node-version: 12.0.0
       - name: Install dependencies
         run: |
+          sudo apt update
           sudo apt-get -yqq install libpq-dev build-essential libcurl4-openssl-dev
           gem install bundler:1.17.3
           bundle install --jobs 4 --retry 3
